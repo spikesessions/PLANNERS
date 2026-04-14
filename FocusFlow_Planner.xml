@@ -1,0 +1,305 @@
+<?xml version="1.0"?>
+<?mso-application progid="Excel.Sheet"?>
+<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"
+ xmlns:o="urn:schemas-microsoft-com:office:office"
+ xmlns:x="urn:schemas-microsoft-com:office:excel"
+ xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"
+ xmlns:html="http://www.w3.org/TR/REC-html40">
+ <DocumentProperties xmlns="urn:schemas-microsoft-com:office:office">
+  <Title>FocusFlow ADHD Planner</Title>
+  <Author>FocusFlow via Antigravity</Author>
+ </DocumentProperties>
+ <Styles>
+  <Style ss:ID="Default" ss:Name="Normal">
+   <Alignment ss:Vertical="Bottom"/>
+   <Borders/>
+   <Font ss:FontName="Calibri" x:Family="Swiss" ss:Size="11" ss:Color="#000000"/>
+   <Interior/>
+   <NumberFormat/>
+   <Protection/>
+  </Style>
+  <!-- Main Title -->
+  <Style ss:ID="sTitle">
+   <Alignment ss:Horizontal="Center" ss:Vertical="Center"/>
+   <Font ss:FontName="Calibri" ss:Size="20" ss:Color="#B2AC88" ss:Bold="1"/>
+  </Style>
+  <!-- Subtitle -->
+  <Style ss:ID="sSubtitle">
+   <Alignment ss:Horizontal="Center" ss:Vertical="Center"/>
+   <Font ss:FontName="Calibri" ss:Size="12" ss:Color="#666666" ss:Italic="1"/>
+  </Style>
+  <!-- Category Headers: Sage Green -->
+  <Style ss:ID="sHeaderSage">
+   <Alignment ss:Horizontal="Center" ss:Vertical="Center"/>
+   <Borders>
+    <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="2" ss:Color="#B2AC88"/>
+    <Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="2" ss:Color="#B2AC88"/>
+   </Borders>
+   <Font ss:FontName="Calibri" ss:Size="14" ss:Color="#FFFFFF" ss:Bold="1"/>
+   <Interior ss:Color="#B2AC88" ss:Pattern="Solid"/>
+  </Style>
+  <!-- Category Headers: Dusty Rose -->
+  <Style ss:ID="sHeaderRose">
+   <Alignment ss:Horizontal="Center" ss:Vertical="Center"/>
+   <Borders>
+    <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="2" ss:Color="#DCAE96"/>
+    <Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="2" ss:Color="#DCAE96"/>
+   </Borders>
+   <Font ss:FontName="Calibri" ss:Size="14" ss:Color="#FFFFFF" ss:Bold="1"/>
+   <Interior ss:Color="#DCAE96" ss:Pattern="Solid"/>
+  </Style>
+  <!-- Category Headers: Slate Blue -->
+  <Style ss:ID="sHeaderBlue">
+   <Alignment ss:Horizontal="Center" ss:Vertical="Center"/>
+   <Borders>
+    <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="2" ss:Color="#A3B1C6"/>
+    <Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="2" ss:Color="#A3B1C6"/>
+   </Borders>
+   <Font ss:FontName="Calibri" ss:Size="14" ss:Color="#FFFFFF" ss:Bold="1"/>
+   <Interior ss:Color="#A3B1C6" ss:Pattern="Solid"/>
+  </Style>
+  <!-- Checkbox Cells -->
+  <Style ss:ID="sCheckbox">
+   <Alignment ss:Horizontal="Center" ss:Vertical="Center"/>
+   <Borders>
+    <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#E4E4E4"/>
+    <Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#E4E4E4"/>
+    <Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#E4E4E4"/>
+    <Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#E4E4E4"/>
+   </Borders>
+   <Font ss:FontName="Calibri" ss:Size="12"/>
+   <Interior ss:Color="#FFFFFF" ss:Pattern="Solid"/>
+  </Style>
+  <!-- Task Cells -->
+  <Style ss:ID="sTask">
+   <Alignment ss:Vertical="Center"/>
+   <Borders>
+    <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#E4E4E4"/>
+   </Borders>
+   <Font ss:FontName="Calibri" ss:Size="12"/>
+  </Style>
+  <!-- Empty Space with Border -->
+  <Style ss:ID="sLine">
+   <Borders>
+    <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#AAAAAA"/>
+   </Borders>
+  </Style>
+ </Styles>
+
+ <!-- SPREADSHEET 1: DOPAMENU -->
+ <Worksheet ss:Name="Dopamenu">
+  <Table>
+   <Column ss:Width="40"/>
+   <Column ss:Width="200"/>
+   <Column ss:Width="40"/>
+   <Column ss:Width="200"/>
+   
+   <Row ss:Height="30">
+    <Cell ss:MergeAcross="3" ss:StyleID="sTitle"><Data ss:Type="String">MY DOPAMENU</Data></Cell>
+   </Row>
+   <Row ss:Height="20">
+    <Cell ss:MergeAcross="3" ss:StyleID="sSubtitle"><Data ss:Type="String">When focus fails, pick something from this menu to recharge.</Data></Cell>
+   </Row>
+   <Row ss:Height="15"></Row>
+   
+   <!-- Headers -->
+   <Row ss:Height="25">
+    <Cell ss:MergeAcross="1" ss:StyleID="sHeaderSage"><Data ss:Type="String">Starters (5-10 min)</Data></Cell>
+    <Cell ss:MergeAcross="1" ss:StyleID="sHeaderRose"><Data ss:Type="String">Mains (30-60 min)</Data></Cell>
+   </Row>
+   
+   <!-- Content Rows -->
+   <Row ss:Height="22">
+    <Cell ss:StyleID="sCheckbox"><Data ss:Type="String">[   ]</Data></Cell>
+    <Cell ss:StyleID="sTask"><Data ss:Type="String">Drink cold water</Data></Cell>
+    <Cell ss:StyleID="sCheckbox"><Data ss:Type="String">[   ]</Data></Cell>
+    <Cell ss:StyleID="sTask"><Data ss:Type="String">Walk outside</Data></Cell>
+   </Row>
+   <Row ss:Height="22">
+    <Cell ss:StyleID="sCheckbox"><Data ss:Type="String">[   ]</Data></Cell>
+    <Cell ss:StyleID="sTask"><Data ss:Type="String">10 jumping jacks</Data></Cell>
+    <Cell ss:StyleID="sCheckbox"><Data ss:Type="String">[   ]</Data></Cell>
+    <Cell ss:StyleID="sTask"><Data ss:Type="String">Paint/Draw</Data></Cell>
+   </Row>
+   <Row ss:Height="22">
+    <Cell ss:StyleID="sCheckbox"><Data ss:Type="String">[   ]</Data></Cell>
+    <Cell ss:StyleID="sTask"><Data ss:Type="String">Listen to favorite song</Data></Cell>
+    <Cell ss:StyleID="sCheckbox"><Data ss:Type="String">[   ]</Data></Cell>
+    <Cell ss:StyleID="sTask"><Data ss:Type="String">Read one chapter</Data></Cell>
+   </Row>
+   <Row ss:Height="22">
+    <Cell ss:StyleID="sCheckbox"><Data ss:Type="String">[   ]</Data></Cell>
+    <Cell ss:StyleID="sTask"><Data ss:Type="String">Quick desk setup</Data></Cell>
+    <Cell ss:StyleID="sCheckbox"><Data ss:Type="String">[   ]</Data></Cell>
+    <Cell ss:StyleID="sTask"><Data ss:Type="String">Practice a hobby</Data></Cell>
+   </Row>
+   <Row ss:Height="22">
+    <Cell ss:StyleID="sCheckbox"><Data ss:Type="String">[   ]</Data></Cell>
+    <Cell ss:StyleID="sTask"><Data ss:Type="String">Pet a dog/cat</Data></Cell>
+    <Cell ss:StyleID="sCheckbox"><Data ss:Type="String">[   ]</Data></Cell>
+    <Cell ss:StyleID="sTask"><Data ss:Type="String">Cook a simple meal</Data></Cell>
+   </Row>
+   <Row ss:Height="25"></Row>
+   
+   <Row ss:Height="25">
+    <Cell ss:MergeAcross="3" ss:StyleID="sHeaderBlue"><Data ss:Type="String">Desserts (Passive Activities)</Data></Cell>
+   </Row>
+   <Row ss:Height="22">
+    <Cell ss:StyleID="sCheckbox"><Data ss:Type="String">[   ]</Data></Cell>
+    <Cell ss:StyleID="sTask"><Data ss:Type="String">Watch one episode</Data></Cell>
+    <Cell ss:StyleID="sCheckbox"><Data ss:Type="String">[   ]</Data></Cell>
+    <Cell ss:StyleID="sTask"><Data ss:Type="String">Take a power nap</Data></Cell>
+   </Row>
+   <Row ss:Height="22">
+    <Cell ss:StyleID="sCheckbox"><Data ss:Type="String">[   ]</Data></Cell>
+    <Cell ss:StyleID="sTask"><Data ss:Type="String">Social media (timed)</Data></Cell>
+    <Cell ss:StyleID="sCheckbox"><Data ss:Type="String">[   ]</Data></Cell>
+    <Cell ss:StyleID="sTask"><Data ss:Type="String">Play a video game</Data></Cell>
+   </Row>
+  </Table>
+ </Worksheet>
+
+ <!-- SPREADSHEET 2: DAILY TRIUMPHS -->
+ <Worksheet ss:Name="Daily Triumphs">
+  <Table>
+   <Column ss:Width="20"/>
+   <Column ss:Width="80"/>
+   <Column ss:Width="250"/>
+   <Column ss:Width="20"/>
+   <Column ss:Width="150"/>
+   
+   <Row ss:Height="30">
+    <Cell ss:MergeAcross="4" ss:StyleID="sTitle"><Data ss:Type="String">DAILY TRIUMPHS</Data></Cell>
+   </Row>
+   <Row ss:Height="20">
+    <Cell ss:MergeAcross="4" ss:StyleID="sSubtitle"><Data ss:Type="String">Less lists, more clarity. Focus on the main goals today.</Data></Cell>
+   </Row>
+   <Row ss:Height="15"></Row>
+   
+   <!-- My 3 Wins Section vs Self Care -->
+   <Row ss:Height="25">
+    <Cell ss:Index="2" ss:MergeAcross="1" ss:StyleID="sHeaderRose"><Data ss:Type="String">MY 3 WINS TODAY</Data></Cell>
+    <Cell ss:Index="5" ss:StyleID="sHeaderSage"><Data ss:Type="String">SELF-CARE CHECKLIST</Data></Cell>
+   </Row>
+   
+   <Row ss:Height="30">
+    <Cell ss:Index="2"><Data ss:Type="String">Win #1:</Data></Cell>
+    <Cell ss:StyleID="sLine"></Cell>
+    <Cell ss:Index="5"><Data ss:Type="String">[   ] Hydration (5 glasses)</Data></Cell>
+   </Row>
+   <Row ss:Height="30">
+    <Cell ss:Index="2"><Data ss:Type="String">Win #2:</Data></Cell>
+    <Cell ss:StyleID="sLine"></Cell>
+    <Cell ss:Index="5"><Data ss:Type="String">[   ] Medication taken</Data></Cell>
+   </Row>
+   <Row ss:Height="30">
+    <Cell ss:Index="2"><Data ss:Type="String">Win #3:</Data></Cell>
+    <Cell ss:StyleID="sLine"></Cell>
+    <Cell ss:Index="5"><Data ss:Type="String">[   ] True break taken</Data></Cell>
+   </Row>
+   
+   <Row ss:Height="25"></Row>
+   
+   <!-- Time Blocking vs Meals -->
+   <Row ss:Height="25">
+    <Cell ss:Index="2" ss:MergeAcross="1" ss:StyleID="sHeaderBlue"><Data ss:Type="String">FLEXIBLE TIME BLOCKING</Data></Cell>
+    <Cell ss:Index="5" ss:StyleID="sHeaderSage"><Data ss:Type="String">MEALS</Data></Cell>
+   </Row>
+   
+   <Row ss:Height="25">
+    <Cell ss:Index="2"><Data ss:Type="String">08:00 AM</Data></Cell>
+    <Cell ss:StyleID="sLine"></Cell>
+    <Cell ss:Index="5"><Data ss:Type="String">[   ] Breakfast</Data></Cell>
+   </Row>
+   <Row ss:Height="25">
+    <Cell ss:Index="2"><Data ss:Type="String">10:00 AM</Data></Cell>
+    <Cell ss:StyleID="sLine"></Cell>
+    <Cell ss:Index="5"><Data ss:Type="String">[   ] Lunch</Data></Cell>
+   </Row>
+   <Row ss:Height="25">
+    <Cell ss:Index="2"><Data ss:Type="String">12:00 PM</Data></Cell>
+    <Cell ss:StyleID="sLine"></Cell>
+    <Cell ss:Index="5"><Data ss:Type="String">[   ] Dinner</Data></Cell>
+   </Row>
+   <Row ss:Height="25">
+    <Cell ss:Index="2"><Data ss:Type="String">02:00 PM</Data></Cell>
+    <Cell ss:StyleID="sLine"></Cell>
+   </Row>
+   <Row ss:Height="25">
+    <Cell ss:Index="2"><Data ss:Type="String">04:00 PM</Data></Cell>
+    <Cell ss:StyleID="sLine"></Cell>
+   </Row>
+   <Row ss:Height="25">
+    <Cell ss:Index="2"><Data ss:Type="String">06:00 PM</Data></Cell>
+    <Cell ss:StyleID="sLine"></Cell>
+   </Row>
+
+  </Table>
+ </Worksheet>
+
+ <!-- SPREADSHEET 3: BRAIN DUMP -->
+ <Worksheet ss:Name="Brain Dump">
+  <Table>
+   <Column ss:Width="20"/>
+   <Column ss:Width="150"/>
+   <Column ss:Width="100"/>
+   <Column ss:Width="100"/>
+   
+   <Row ss:Height="30">
+    <Cell ss:MergeAcross="3" ss:StyleID="sTitle"><Data ss:Type="String">BRAIN DUMP</Data></Cell>
+   </Row>
+   <Row ss:Height="20">
+    <Cell ss:MergeAcross="3" ss:StyleID="sSubtitle"><Data ss:Type="String">Get the chaos out of your head. Write everything here.</Data></Cell>
+   </Row>
+   <Row ss:Height="15"></Row>
+   
+   <Row ss:Height="25">
+    <Cell ss:Index="2" ss:StyleID="sHeaderSage"><Data ss:Type="String">Thought / Task</Data></Cell>
+    <Cell ss:StyleID="sHeaderRose"><Data ss:Type="String">Category</Data></Cell>
+    <Cell ss:StyleID="sHeaderBlue"><Data ss:Type="String">Urgent?</Data></Cell>
+   </Row>
+   
+   <Row ss:Height="25">
+    <Cell ss:Index="2" ss:StyleID="sLine"></Cell>
+    <Cell ss:StyleID="sLine"></Cell>
+    <Cell ss:StyleID="sLine"></Cell>
+   </Row>
+   <Row ss:Height="25">
+    <Cell ss:Index="2" ss:StyleID="sLine"></Cell>
+    <Cell ss:StyleID="sLine"></Cell>
+    <Cell ss:StyleID="sLine"></Cell>
+   </Row>
+   <Row ss:Height="25">
+    <Cell ss:Index="2" ss:StyleID="sLine"></Cell>
+    <Cell ss:StyleID="sLine"></Cell>
+    <Cell ss:StyleID="sLine"></Cell>
+   </Row>
+   <Row ss:Height="25">
+    <Cell ss:Index="2" ss:StyleID="sLine"></Cell>
+    <Cell ss:StyleID="sLine"></Cell>
+    <Cell ss:StyleID="sLine"></Cell>
+   </Row>
+   <Row ss:Height="25">
+    <Cell ss:Index="2" ss:StyleID="sLine"></Cell>
+    <Cell ss:StyleID="sLine"></Cell>
+    <Cell ss:StyleID="sLine"></Cell>
+   </Row>
+   <Row ss:Height="25">
+    <Cell ss:Index="2" ss:StyleID="sLine"></Cell>
+    <Cell ss:StyleID="sLine"></Cell>
+    <Cell ss:StyleID="sLine"></Cell>
+   </Row>
+   <Row ss:Height="25">
+    <Cell ss:Index="2" ss:StyleID="sLine"></Cell>
+    <Cell ss:StyleID="sLine"></Cell>
+    <Cell ss:StyleID="sLine"></Cell>
+   </Row>
+   <Row ss:Height="25">
+    <Cell ss:Index="2" ss:StyleID="sLine"></Cell>
+    <Cell ss:StyleID="sLine"></Cell>
+    <Cell ss:StyleID="sLine"></Cell>
+   </Row>
+
+  </Table>
+ </Worksheet>
+</Workbook>
