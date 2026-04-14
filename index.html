@@ -3,81 +3,1574 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FocusFlow | Premium ADHD Digital Planner</title>
-    <meta name="description" content="Tired of endless to-do lists that paralyze you? FocusFlow is designed to work WITH your brain, not against it.">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Outfit:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
+    <title>Focus Flow - ADHD Focus Planner</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;1,600&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        /* Base Variables - Minimal Premium */
+        :root {
+            --lilac: #EDDFFC; --mint: #E1F8F5; --peach: #FFEBE1;
+            --rose-gold: #AF767A; --rose-light: #E0C8CB;
+            --leather: #F2F1F0; --paper: #FDFDFD; 
+            --text-dark: #3A3A3A; --text-light: #888888;
+            --binder-width: 1400px; --binder-height: 900px; 
+            --page-width: 600px; --page-height: 850px;
+        }
+
+        /* Layout & Typography */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background-color: #EAEAEA; font-family: 'Outfit', sans-serif; color: var(--text-dark); display: flex; flex-direction: column; align-items: center; padding: 20px 40px 60px 40px; overflow-x: hidden; }
+
+        /* Controls */
+        .controls-bar { margin-bottom: 50px; background: #fff; padding: 12px 25px; border-radius: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); display: flex; gap: 12px; align-items: center; z-index: 1000; }
+        .btn { background: var(--paper); color: var(--text-dark); border: 1px solid #ddd; padding: 8px 18px; border-radius: 20px; font-family: 'Montserrat', sans-serif; font-weight: 600; font-size: 13px; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 8px; }
+        .btn:hover { background: var(--rose-gold); color: white; border-color: var(--rose-gold); transform: translateY(-1px); }
+        .btn-wipe { background: #feebeb; border-color: #fab4b4; color: #a33; } .btn-wipe:hover { background: #d9534f; color: white;}
+
+        /* Widget Toolbox */
+        #toolbox-btn { position: fixed; bottom: 30px; left: 30px; background: white; color: var(--text-dark); padding: 12px 20px; border-radius: 30px; font-family: 'Montserrat', sans-serif; font-weight: bold; font-size: 14px; cursor: pointer; box-shadow: 0 10px 30px rgba(0,0,0,0.1); z-index: 2000; border: 1px solid #eee; transition: all 0.3s; }
+        #toolbox-btn:hover { background: var(--rose-gold); color: white; }
+        #toolbox-modal { display: none; position: fixed; bottom: 80px; left: 30px; background: white; width: 260px; border-radius: 15px; box-shadow: 0 15px 35px rgba(0,0,0,0.15); padding: 15px; z-index: 2000; border: 1px solid #f0f0f0; }
+        #toolbox-modal.open { display: block; animation: popup 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        @keyframes popup { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .widget-option { padding: 10px; border-radius: 8px; background: #fafafa; margin-bottom: 8px; cursor: pointer; font-size: 13px; font-weight: 500; border-left: 3px solid #ccc; transition: all 0.2s;}
+        .widget-option:hover { background: #f0f0f0; border-color: var(--rose-gold); }
+
+        /* Binder Core & Rings */
+        .binder { width: var(--binder-width); height: var(--binder-height); background: var(--leather); border-radius: 15px; box-shadow: inset 0 0 15px rgba(0,0,0,0.05), 0 20px 40px rgba(0,0,0,0.15); display: flex; align-items: center; justify-content: center; position: relative; border: 1px solid #e0e0e0; transition: opacity 0.3s; }
+        .rings-container { width: 40px; height: var(--page-height); position: absolute; left: 50%; top: 0; transform: translateX(-50%); display: flex; flex-direction: column; justify-content: space-evenly; align-items: center; z-index: 20; pointer-events: none; }
+        .ring { width: 50px; height: 10px; background: linear-gradient(to bottom, #d2a1a8, var(--rose-gold) 30%, #fff 50%, var(--rose-gold) 70%, #6f4249); border-radius: 5px; box-shadow: 0 4px 4px rgba(0,0,0,0.2), inset 0 2px 2px rgba(255,255,255,0.4); display: flex; justify-content: space-between; }
+        .hole { width: 12px; height: 12px; background: #222; border-radius: 50%; box-shadow: inset 0 2px 4px rgba(0,0,0,0.6); margin: -1px; }
+
+        /* Top Tabs (Main Navigation) */
+        .top-tabs { position: absolute; top: -35px; left: 80px; right:80px; display: flex; justify-content: space-around; z-index: 10; }
+        .top-tab { background: #E5DFEE; padding: 10px 22px 15px; border-radius: 12px 12px 0 0; font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 600; color: #5B526A; box-shadow: inset 0 1px 3px rgba(255,255,255,0.7), 0 -2px 5px rgba(0,0,0,0.05); transition: all 0.3s; cursor: pointer; border: 1px solid rgba(0,0,0,0.05); border-bottom: none; }
+        .top-tab:hover, .top-tab.active { transform: translateY(-5px); background: var(--paper); color: var(--rose-gold); box-shadow: 0 -5px 15px rgba(0,0,0,0.08); z-index: 11;}
+
+        /* Pages & Design Elements */
+        .page-spread { display: none; gap: 0; align-items: center; position: relative; animation: fadeIn 0.4s; }
+        .page-spread.active { display: flex; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .page { width: var(--page-width); height: var(--page-height); background: var(--paper); position: relative; padding: 50px 60px; overflow-y: auto;}
+        .page-left { border-radius: 10px 0 0 10px; box-shadow: -5px 0 15px rgba(0,0,0,0.05), inset -20px 0 30px rgba(0,0,0,0.03); }
+        .page-right { border-radius: 0 10px 10px 0; box-shadow: 5px 0 15px rgba(0,0,0,0.05), inset 20px 0 30px rgba(0,0,0,0.03); }
+
+        .header-title { font-family: 'Playfair Display', serif; font-size: 32px; color: var(--rose-gold); margin-bottom: 5px; }
+        .header-subtitle { font-family: 'Montserrat', sans-serif; font-size: 12px; color: var(--text-light); border-bottom: 1px solid var(--rose-light); padding-bottom: 12px; margin-bottom: 25px; }
+
+        /* UI Blocks */
+        .block-card { background: #ffffff; border-radius: 12px; padding: 18px; margin-bottom: 18px; border: 1px solid #f4f4f4; box-shadow: 0 4px 12px rgba(0,0,0,0.02); position: relative; transition: border-color 0.2s;}
+        .block-card:hover { border-color: var(--rose-light); }
+        .bg-paper { background: linear-gradient(145deg, #fff, var(--paper)); }
+        .bg-peach { background: linear-gradient(145deg, #fff, var(--peach)); }
+        .bg-mint { background: linear-gradient(145deg, #fff, var(--mint)); }
+        .bg-lilac { background: linear-gradient(145deg, #fff, var(--lilac)); }
+
+        .block-title { font-family: 'Montserrat', sans-serif; font-size: 14px; font-weight: 700; color: var(--text-dark); margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;}
+        
+        /* Functional Components */
+        .btn-add { background: var(--mint); border: none; color: #3a5c5f; width: 22px; height: 22px; border-radius: 6px; cursor: pointer; font-size: 16px; font-weight: bold; transition: background 0.2s; display:flex; align-items:center; justify-content:center;}
+        .btn-add:hover { background: #b0e5e9; }
+        .task-row { display: flex; align-items: center; margin-bottom: 8px; font-size: 14px; position: relative; padding: 4px; border-radius: 5px; transition: background 0.2s;}
+        .task-row:hover { background: #f9f9f9; }
+        .controls-go { position: absolute; right: 5px; opacity: 0; display: flex; gap: 5px; transition: opacity 0.2s; }
+        .task-row:hover .controls-go { opacity: 1; }
+        
+        .btn-cal { background: #4285F4; border: none; color: #fff; width: 20px; height: 20px; border-radius: 4px; cursor: pointer; font-size: 10px; display:flex; align-items:center; justify-content:center;}
+        .btn-del { background: #F8D7DA; border: 1px solid #F5C2C7; color: #842029; width: 20px; height: 20px; border-radius: 4px; cursor: pointer; font-size: 10px; display:flex; align-items:center; justify-content:center;}
+        .btn-del:hover { background: #842029; color: white;}
+
+        [contenteditable="true"] { outline: none; border-bottom: 1px dashed transparent; flex-grow: 1; padding: 2px 5px; transition: all 0.2s; min-width: 20px;}
+        [contenteditable="true"]:focus { border-bottom: 1px dashed var(--rose-gold); background: rgba(255,255,255,0.7); border-radius: 4px;}
+        
+        input[type="checkbox"] { appearance: none; width: 16px; height: 16px; border: 1.5px solid #ccc; border-radius: 4px; margin-right: 10px; background: white; cursor: pointer; position: relative; flex-shrink: 0;}
+        input[type="checkbox"]:checked { background: var(--rose-gold); border-color: var(--rose-gold); }
+        input[type="checkbox"]:checked::after { content: "✓"; color: white; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 11px; font-weight: bold; }
+
+        /* Radio Buttons for Task Starter */
+        .radio-group { display: flex; gap: 10px; margin-top: 5px; flex-wrap: wrap;}
+        .radio-btn { padding: 4px 10px; border: 1px solid #ddd; border-radius: 12px; font-size: 12px; cursor: pointer; background: white; user-select: none; transition: all 0.2s;}
+        .radio-btn.active { background: var(--rose-light); border-color: var(--rose-gold); font-weight: 600;}
+
+        /* Tables for Hyperfocus Tracker */
+        .clean-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+        .clean-table th { text-align: left; padding: 8px 5px; border-bottom: 1px solid var(--rose-light); color: var(--text-light); font-weight: 500;}
+        .clean-table td { padding: 6px 5px; border-bottom: 1px solid #f0f0f0; }
+
+        /* Energy Map Grid */
+        .energy-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
+
+        /* Print Settings */
+        @media print {
+            body { background: none; padding: 0; }
+            .controls-bar, #toolbox-btn, #toolbox-modal { display: none !important; }
+            .binder { box-shadow: none; border: none; background: transparent; width: auto; height: auto;}
+            .top-tabs, .btn-add, .controls-go { display: none !important; }
+            .page-spread { display: flex !important; margin-bottom: 0; page-break-after: always; }
+            .page-left, .page-right { box-shadow: none; border: 1px solid #eee;}
+            @page { size: landscape; margin: 0; }
+        }
+    </style>
 </head>
 <body>
-    <nav class="navbar">
-        <div class="logo-container">
-            <img src="../../../../brain/e6bbe3e8-31fb-42ad-919f-b4098efe2504/focusflow_logo_1775519334600.png" alt="FocusFlow Logo" class="brand-logo">
-            <span class="brand-name">FocusFlow</span>
-        </div>
-        <div class="nav-links">
-            <a href="#features">Features</a>
-            <a href="#demo">Inside the Planner</a>
-            <a href="#get-it" class="btn-primary-sm">Get Yours</a>
-        </div>
-    </nav>
 
-    <header class="hero">
-        <div class="hero-content">
-            <h1 class="animate-up">Designed to work <br><span class="highlight">WITH your brain</span></h1>
-            <p class="hero-sub animate-up delay-1">The holistic digital organization ecosystem. Say goodbye to executive dysfunction and hello to clarity.</p>
-            <div class="cta-group animate-up delay-2">
-                <a href="#get-it" class="btn-primary">Download Planner</a>
-                <a href="planner.html" target="_blank" class="btn-secondary">View Live Demo</a>
-            </div>
-            <div class="reviews animate-up delay-3">
-                ⭐⭐⭐⭐⭐ Loved by 10,000+ neurodivergent minds
-            </div>
-        </div>
-        <div class="hero-visual animate-float">
-            <img src="../../../../brain/e6bbe3e8-31fb-42ad-919f-b4098efe2504/antigravity_planner_mockup_1775519404400.png" alt="Anti-gravity 3D mockup of the FocusFlow Digital Planner">
-        </div>
-    </header>
+    <!-- Top Controls -->
+    <div class="controls-bar">
+        <button class="btn btn-wipe" onclick="wipeData()">🗑️ Wipe Memory</button>
+        <button class="btn" style="background:var(--mint);" onclick="window.print()">🖨️ PDF Export</button>
+        <button class="btn" onclick="exportBackup()">💾 Save Backup</button>
+        <label class="btn" style="cursor: pointer;">📂 Load Backup <input type="file" id="file-input" style="display: none;" accept=".html_data"></label>
+    </div>
 
-    <section id="features" class="features">
-        <div class="section-title">
-            <h2>The Antidote to Overwhelm</h2>
-            <p>Our ADHD-friendly ecosystem breaks down the chaos into manageable, rewarding steps.</p>
-        </div>
-        <div class="feature-grid">
-            <div class="feature-card glass">
-                <div class="icon">✨</div>
-                <h3>The Dopamenu</h3>
-                <p>A structured approach to managing your energy. Pick tasks based on the dopamine boost you need right now.</p>
-            </div>
-            <div class="feature-card glass">
-                <div class="icon">🧠</div>
-                <h3>Brain Dump Space</h3>
-                <p>Get the chaos out of your head with no pressure. Categorize your thoughts only when you're ready.</p>
-            </div>
-            <div class="feature-card glass">
-                <div class="icon">🏆</div>
-                <h3>Daily 3 Triumphs</h3>
-                <p>Stop feeling defeated by 20-item to-do lists. We focus on securing 3 core wins every single day.</p>
-            </div>
-        </div>
-    </section>
+    <!-- Expansion Widgets -->
+    <div id="toolbox-btn" onclick="toggleToolbox()">🧩 Expansion Packs</div>
+    <div id="toolbox-modal">
+        <h3 style="font-family:'Montserrat'; margin-bottom:10px; font-size:14px; color:var(--rose-gold);">Support Toolkit</h3>
+        <div class="widget-option" onclick="injectWidget('sensory')">🎧 Sensory Check-in</div>
+        <div class="widget-option" onclick="injectWidget('therapy')">🧠 Therapy Notes</div>
+        <div class="widget-option" onclick="injectWidget('finance')">💸 Impulse Buying Block</div>
+    </div>
 
-    <section id="get-it" class="cta-section">
-        <div class="cta-glass-box">
-            <h2>Start your Journey Today</h2>
-            <p>Download the fully interactive PDF, ready for GoodNotes, Notability, and other apps.</p>
-            <div class="price">
-                <span class="original-price">$29.99</span>
-                <span class="current-price">$14.99</span>
-            </div>
-            <a href="planner.html" download="FocusFlow_Planner.html" class="btn-primary large">Download My Planner</a>
+    <!-- The Master Binder -->
+    <div class="binder" id="binder-core">
+        
+        <!-- Navigation V2 -->
+        <div class="top-tabs">
+            <div class="top-tab" data-target="spread-cover">Cover</div>
+            <div class="top-tab" data-target="spread-today">Today</div>
+            <div class="top-tab" data-target="spread-menu">Menu</div>
+            <div class="top-tab" data-target="spread-start">Start</div>
+            <div class="top-tab" data-target="spread-focus">Focus</div>
+            <div class="top-tab" data-target="spread-hyper">Hyper</div>
+            <div class="top-tab" data-target="spread-energy">Energy</div>
+            <div class="top-tab" data-target="spread-dump">Dump</div>
+            <div class="top-tab" data-target="spread-wins">Wins + Minimum Day</div>
+            <div class="top-tab" data-target="spread-reset">Reset</div>
         </div>
-    </section>
 
-    <footer>
-        <p>&copy; 2026 FocusFlow Organization. All rights reserved.</p>
-    </footer>
+        <div id="spread-container">
+            
+            <!-- ====== 1. COVER ====== -->
+            <div class="page-spread" id="spread-cover">
+                <div class="page page-left" style="display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center;">
+                    <div style="width: 200px; height: 300px; border: 1px solid #e0e0e0; border-radius: 10px; background: #fafafa; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:20px;">
+                        <span contenteditable="true" style="font-family:'Playfair Display'; font-size:24px; font-weight:700; color:var(--rose-gold); letter-spacing: 1px;">Focus Flow</span>
+                        <div style="width:50%; height:1px; background:var(--rose-light); margin:15px 0;"></div>
+                        <span contenteditable="true" style="font-size:11px; color:#888; text-transform: uppercase; letter-spacing: 2px;">Digital Edition</span>
+                    </div>
+                </div>
+                <div class="page page-right" style="display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center;">
+                    <div style="width: 80px; height: 3px; background: var(--rose-gold); margin-bottom: 30px;"></div>
+                    <h1 style="font-family:'Playfair Display'; font-size:46px; color:var(--text-dark); letter-spacing:3px; line-height: 1.2;" contenteditable="true">ADHD FOCUS<br><span style="color:var(--rose-gold);">PLANNER</span></h1>
+                    <div style="font-size:15px; color:var(--text-light); margin:20px 0 60px 0; letter-spacing:1.5px; text-transform: uppercase;" contenteditable="true">Gentle structure for real brains.</div>
+                    
+                    <div style="font-size:13px; font-weight:600; text-transform:uppercase; margin-bottom:10px; color: var(--rose-gold);">This planner belongs to:</div>
+                    <div contenteditable="true" style="border-bottom:2px solid var(--text-dark); width:280px; padding-bottom:5px; margin-bottom:50px; font-size:24px; font-family:'Playfair Display';"></div>
+                    
+                    <div style="font-size:13px; color:#999; max-width:300px; font-style:italic;" contenteditable="true">"Start where you are. Build from there."</div>
+                </div>
+            </div>
 
-    <script src="script.js"></script>
+            <!-- ====== 2. TODAY DASHBOARD ====== -->
+            <div class="page-spread" id="spread-today">
+                <div class="page page-left">
+                    <h1 class="header-title" contenteditable="true">Today Dashboard</h1>
+                    <div class="header-subtitle" style="display:flex; justify-content:space-between; align-items:center;">
+                        <span contenteditable="true">Your cockpit. Clear for takeoff.</span>
+                        <span id="v3-date-nav" style="display:flex; gap:10px; align-items:center; user-select:none;">
+                            <button class="btn" style="padding: 4px 8px; font-size:10px;" onclick="v3_changeDate(-1)">◄</button>
+                            <span id="v3-date-display" style="font-weight:bold; font-size:14px; min-width:85px; text-align:center;"></span>
+                            <button class="btn" style="padding: 4px 8px; font-size:10px;" onclick="v3_changeDate(1)">►</button>
+                            <button class="btn" style="padding: 4px 8px; font-size:10px;" onclick="v3_changeDate(0)">Today</button>
+                        </span>
+                    </div>
+
+                    <div id="v3-active-timer" style="margin-bottom:15px; display:none;"></div>
+
+                    <div style="display:grid; grid-template-columns:1fr; gap:15px;">
+                        <!-- Focus -->
+                        <div class="block-card bg-peach">
+                            <div class="block-title">Focus of the day</div>
+                            <div id="v3-focus-input" contenteditable="true" style="font-size:18px; line-height:30px; font-family:'Playfair Display'; color:var(--rose-gold);" onblur="v3_updatePageField('focusOfDay', this.innerText)"></div>
+                        </div>
+
+                        <!-- Minimum Tasks (V3 Engine JSON) -->
+                        <div class="block-card dynamic-list">
+                            <div class="block-title"><div><span>My tasks for today</span></div> <button class="btn-add" onclick="v3_addTask()">+</button></div>
+                            <div id="v3-today-tasks">
+                                <!-- Re-rendered by V3 JS -->
+                            </div>
+                        </div>
+
+                        <!-- Status Bar -->
+                        <div style="display:flex; gap:15px;">
+                            <div class="block-card" style="flex:1;">
+                                <div class="block-title" style="font-size:12px;">Energy Level</div>
+                                <div class="radio-group" id="v3-energy-group">
+                                    <div class="radio-btn" onclick="v3_setEnergy(1)">1</div><div class="radio-btn" onclick="v3_setEnergy(2)">2</div><div class="radio-btn" onclick="v3_setEnergy(3)">3</div><div class="radio-btn" onclick="v3_setEnergy(4)">4</div><div class="radio-btn" onclick="v3_setEnergy(5)">5</div>
+                                </div>
+                            </div>
+                            <div class="block-card" style="flex:1;">
+                                <div class="block-title" contenteditable="true" style="font-size:12px;">Bonus Task</div>
+                                <div contenteditable="true" style="font-size:13px; color:#666;">If I have more energy...</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="page page-right">
+                    <div style="margin-top: 60px;">
+                        <div style="display:grid; grid-template-columns:1fr; gap:15px;">
+                            <div class="block-card bg-lilac">
+                                <div class="block-title" contenteditable="true">Dopamenu Suggestion</div>
+                                <div contenteditable="true" style="font-size:14px; min-height:40px;">Listen to brown noise playlist.</div>
+                            </div>
+                            <div class="block-card" style="border:1px dashed var(--rose-light);">
+                                <div class="block-title">Today's Reward</div>
+                                <div id="v3-reward-input" contenteditable="true" style="font-size:14px; min-height:40px;" onblur="v3_updatePageField('rewardOfDay', this.innerText)"></div>
+                            </div>
+                            <div class="block-card bg-mint">
+                                <div class="block-title" contenteditable="true">Main Win</div>
+                                <div contenteditable="true" style="font-size:14px; min-height:40px;">Actually started work at 10:00 AM!</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Dropzone Top Right -->
+                        <div class="dropzone" style="margin-top: 30px; border: 2px dashed #ddd; border-radius: 12px; padding: 20px; text-align: center; color: #aaa; min-height:100px; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:500;">
+                            + Add Support Widget
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ====== 3. DOPAMENU ====== -->
+            <div class="page-spread" id="spread-menu">
+                <div class="page page-left">
+                    <h1 class="header-title" contenteditable="true">Dopamenu</h1>
+                    <div class="header-subtitle" contenteditable="true">Pick what helps, not what pressures.</div>
+
+                    <div class="block-card bg-mint dynamic-list">
+                        <div class="block-title"><div><span contenteditable="true">Quick Boosts (2-10 mins)</span></div> <button class="btn-add">+</button></div>
+                        <div class="task-row"><input type="checkbox"><span contenteditable="true">Drink a glass of cold water</span><div class="controls-go"><button class="btn-cal" onclick="syncCal(this)">📅</button><button class="btn-del" onclick="delRow(this)">❌</button></div></div>
+                        <div class="task-row"><input type="checkbox"><span contenteditable="true">2-minute standing stretch</span><div class="controls-go"><button class="btn-cal" onclick="syncCal(this)">📅</button><button class="btn-del" onclick="delRow(this)">❌</button></div></div>
+                        <div class="task-row"><input type="checkbox"><span contenteditable="true">Play one high-energy song</span><div class="controls-go"><button class="btn-cal" onclick="syncCal(this)">📅</button><button class="btn-del" onclick="delRow(this)">❌</button></div></div>
+                        <div class="task-row"><input type="checkbox"><span contenteditable="true">Open windows to let light in</span><div class="controls-go"><button class="btn-cal" onclick="syncCal(this)">📅</button><button class="btn-del" onclick="delRow(this)">❌</button></div></div>
+                        <div class="task-row"><input type="checkbox"><span contenteditable="true">Put 5 items away around the room</span><div class="controls-go"><button class="btn-cal" onclick="syncCal(this)">📅</button><button class="btn-del" onclick="delRow(this)">❌</button></div></div>
+                    </div>
+
+                    <div class="block-card bg-lilac dynamic-list">
+                        <div class="block-title"><div><span contenteditable="true">Low Energy Support</span></div> <button class="btn-add">+</button></div>
+                        <div class="task-row"><input type="checkbox"><span contenteditable="true">Bare minimum mode (just survive)</span><div class="controls-go"><button class="btn-cal" onclick="syncCal(this)">📅</button><button class="btn-del" onclick="delRow(this)">❌</button></div></div>
+                        <div class="task-row"><input type="checkbox"><span contenteditable="true">Simple/Safe meal (Zero cooking)</span><div class="controls-go"><button class="btn-cal" onclick="syncCal(this)">📅</button><button class="btn-del" onclick="delRow(this)">❌</button></div></div>
+                        <div class="task-row"><input type="checkbox"><span contenteditable="true">Wear comfortable sensory clothes</span><div class="controls-go"><button class="btn-cal" onclick="syncCal(this)">📅</button><button class="btn-del" onclick="delRow(this)">❌</button></div></div>
+                        <div class="task-row"><input type="checkbox"><span contenteditable="true">Use paper plates to skip washing up</span><div class="controls-go"><button class="btn-cal" onclick="syncCal(this)">📅</button><button class="btn-del" onclick="delRow(this)">❌</button></div></div>
+                        <div class="task-row"><input type="checkbox"><span contenteditable="true">Cancel non-vital commitments</span><div class="controls-go"><button class="btn-cal" onclick="syncCal(this)">📅</button><button class="btn-del" onclick="delRow(this)">❌</button></div></div>
+                    </div>
+                </div>
+                <div class="page page-right">
+                    <div class="block-card bg-peach dynamic-list" style="margin-top: 60px;">
+                        <div class="block-title"><div><span contenteditable="true">Focus Launchers</span></div> <button class="btn-add">+</button></div>
+                        <div class="task-row"><input type="checkbox"><span contenteditable="true">Start a 5-minute timer</span><div class="controls-go"><button class="btn-cal" onclick="syncCal(this)">📅</button><button class="btn-del" onclick="delRow(this)">❌</button></div></div>
+                        <div class="task-row"><input type="checkbox"><span contenteditable="true">Desk reset (clear visual noise)</span><div class="controls-go"><button class="btn-cal" onclick="syncCal(this)">📅</button><button class="btn-del" onclick="delRow(this)">❌</button></div></div>
+                        <div class="task-row"><input type="checkbox"><span contenteditable="true">Put on noise-canceling headphones</span><div class="controls-go"><button class="btn-cal" onclick="syncCal(this)">📅</button><button class="btn-del" onclick="delRow(this)">❌</button></div></div>
+                        <div class="task-row"><input type="checkbox"><span contenteditable="true">Open ONLY the necessary file/app</span><div class="controls-go"><button class="btn-cal" onclick="syncCal(this)">📅</button><button class="btn-del" onclick="delRow(this)">❌</button></div></div>
+                        <div class="task-row"><input type="checkbox"><span contenteditable="true">Write down just the FIRST micro-step</span><div class="controls-go"><button class="btn-cal" onclick="syncCal(this)">📅</button><button class="btn-del" onclick="delRow(this)">❌</button></div></div>
+                    </div>
+
+                    <div class="block-card dynamic-list" style="border: 1px solid var(--rose-light);">
+                        <div class="block-title"><div><span contenteditable="true">Guilt-Free Rewards</span></div> <button class="btn-add">+</button></div>
+                        <div class="task-row"><input type="checkbox"><span contenteditable="true">1 Episode of hyperfixation show</span><div class="controls-go"><button class="btn-cal" onclick="syncCal(this)">📅</button><button class="btn-del" onclick="delRow(this)">❌</button></div></div>
+                        <div class="task-row"><input type="checkbox"><span contenteditable="true">Guilt-free doomscrolling (Set timer)</span><div class="controls-go"><button class="btn-cal" onclick="syncCal(this)">📅</button><button class="btn-del" onclick="delRow(this)">❌</button></div></div>
+                        <div class="task-row"><input type="checkbox"><span contenteditable="true">20-minute video game session</span><div class="controls-go"><button class="btn-cal" onclick="syncCal(this)">📅</button><button class="btn-del" onclick="delRow(this)">❌</button></div></div>
+                        <div class="task-row"><input type="checkbox"><span contenteditable="true">Take a hot shower or bath</span><div class="controls-go"><button class="btn-cal" onclick="syncCal(this)">📅</button><button class="btn-del" onclick="delRow(this)">❌</button></div></div>
+                        <div class="task-row"><input type="checkbox"><span contenteditable="true">Eat a high-dopamine snack</span><div class="controls-go"><button class="btn-cal" onclick="syncCal(this)">📅</button><button class="btn-del" onclick="delRow(this)">❌</button></div></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ====== 4. TASK STARTER ====== -->
+            <div class="page-spread" id="spread-start">
+                <div class="page page-left">
+                    <h1 class="header-title" contenteditable="true">Task Starter</h1>
+                    <div class="header-subtitle" contenteditable="true">Break the freeze. Start tiny.</div>
+                    
+                    <div class="block-card" style="border-left: 4px solid var(--rose-gold);">
+                        <div class="block-title" contenteditable="true">Task I'm avoiding:</div>
+                        <div contenteditable="true" style="font-size:16px; min-height:40px;">Doing the taxes...</div>
+                    </div>
+                    
+                    <div class="block-card">
+                        <div class="block-title" contenteditable="true">Why am I avoiding it?</div>
+                        <div class="radio-group" style="margin-bottom:10px;">
+                            <div class="radio-btn">Too big</div>
+                            <div class="radio-btn">Boring</div>
+                            <div class="radio-btn">Unclear steps</div>
+                            <div class="radio-btn">Fear of failing</div>
+                            <div class="radio-btn">Low energy</div>
+                            <div class="radio-btn">Perfectionism</div>
+                        </div>
+                        <div contenteditable="true" style="font-size:12px; color:#888;">Other reason: ...</div>
+                    </div>
+                </div>
+                <div class="page page-right">
+                    <div class="block-card bg-peach" style="margin-top: 60px; box-shadow: 0 8px 20px rgba(255, 235, 225, 0.5);">
+                        <div class="block-title" contenteditable="true" style="color:var(--rose-gold); font-size:16px;">The First Tiny Step:</div>
+                        <div contenteditable="true" style="font-size:18px; font-weight:600; min-height:40px;">Just open the browser tab.</div>
+                    </div>
+
+                    <div class="block-card">
+                        <div class="block-title" contenteditable="true">Start timer:</div>
+                        <div class="radio-group" style="padding:10px 0;">
+                            <div class="radio-btn" style="font-weight:bold;">[ 3 min ]</div>
+                            <div class="radio-btn" style="font-weight:bold;">[ 5 min ]</div>
+                            <div class="radio-btn" style="font-weight:bold;">[ 10 min ]</div>
+                        </div>
+                    </div>
+
+                    <div class="block-card bg-mint">
+                        <div class="block-title" contenteditable="true">Reward after starting:</div>
+                        <div contenteditable="true" style="font-size:14px; min-height:40px;">A piece of chocolate.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ====== 5. FOCUS BLOCKS ====== -->
+            <div class="page-spread" id="spread-focus">
+                <div class="page page-left">
+                    <h1 class="header-title" contenteditable="true">Focus Blocks</h1>
+                    <div class="header-subtitle" contenteditable="true">Structure helps. Flexibility stays.</div>
+
+                    <div id="v3-focus-blocks-left"></div>
+                    <div style="margin-top:20px;">
+                        <button class="btn" style="background:#eee" onclick="v3_addFocusBlock(plannerState.ui.selectedDate)">+ Add Block</button>
+                    </div>
+                </div>
+                <div class="page page-right">
+                    <div id="v3-focus-blocks-right" style="margin-top: 60px;"></div>
+                </div>
+            </div>
+
+            <!-- ====== 6. HYPERFOCUS TRACKER ====== -->
+            <div class="page-spread" id="spread-hyper">
+                <div class="page page-left">
+                    <h1 class="header-title" contenteditable="true">Hyperfocus Log</h1>
+                    <div class="header-subtitle" contenteditable="true">Notice patterns. Keep the good parts.</div>
+
+                    <div class="block-card" style="padding:10px;">
+                        <table class="clean-table" id="hyper-table">
+                            <thead>
+                                <tr><th>Date</th><th>Activity</th><th>Start</th><th>End</th><th>Dur</th><th>W💧</th><th>F🍔</th><th>❌</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td contenteditable="true">01/04</td><td contenteditable="true">Coding App</td><td contenteditable="true">14:00</td><td contenteditable="true">19:00</td><td contenteditable="true">5h</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><button class="btn-del" onclick="this.parentElement.parentElement.remove()">X</button></td></tr>
+                                <tr><td contenteditable="true">03/04</td><td contenteditable="true">Wikipedia dive</td><td contenteditable="true">22:00</td><td contenteditable="true">01:00</td><td contenteditable="true">3h</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><button class="btn-del" onclick="this.parentElement.parentElement.remove()">X</button></td></tr>
+                                <tr><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><button class="btn-del" onclick="this.parentElement.parentElement.remove()">X</button></td></tr>
+                                <tr><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><button class="btn-del" onclick="this.parentElement.parentElement.remove()">X</button></td></tr>
+                            </tbody>
+                        </table>
+                        <button class="btn-add" style="margin-top:10px;" onclick="addHyperRow()">+</button>
+                    </div>
+                </div>
+                <div class="page page-right">
+                    <div class="block-card" style="margin-top: 60px;">
+                        <div class="block-title" contenteditable="true">Impacts / Notes of the week:</div>
+                        <div contenteditable="true" style="font-size:13px; line-height:22px; min-height:100px;">
+                            Hyperfocused on Monday, crashed on Tuesday. Need to remember water.
+                        </div>
+                    </div>
+
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px;">
+                        <div class="block-card bg-peach">
+                            <div class="block-title" contenteditable="true" style="font-size:12px;">Longest Session</div>
+                            <div contenteditable="true" style="font-size:16px; font-weight:bold;">5h (Coding)</div>
+                        </div>
+                        <div class="block-card bg-mint">
+                            <div class="block-title" contenteditable="true" style="font-size:12px;">Average</div>
+                            <div contenteditable="true" style="font-size:16px; font-weight:bold;">3h</div>
+                        </div>
+                        <div class="block-card">
+                            <div class="block-title" contenteditable="true" style="font-size:12px;">Best Time</div>
+                            <div contenteditable="true" style="font-size:16px; font-weight:bold;">Late Afternoon</div>
+                        </div>
+                        <div class="block-card bg-lilac">
+                            <div class="block-title" contenteditable="true" style="font-size:12px;">Top Trigger</div>
+                            <div contenteditable="true" style="font-size:16px; font-weight:bold;">New Tech</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ====== 7. ENERGY MAP ====== -->
+            <div class="page-spread" id="spread-energy">
+                <div class="page page-left">
+                    <h1 class="header-title" contenteditable="true">Energy Map</h1>
+                    <div class="header-subtitle" contenteditable="true">Work with your state, not against it.</div>
+
+                    <div class="block-card" style="border-left: 4px solid var(--rose-gold);">
+                        <div class="block-title" contenteditable="true">⚡ High Energy</div>
+                        <div style="font-size:13px; line-height:24px;">
+                            <strong>Tasks:</strong> <span contenteditable="true">Deep work, big decisions.</span><br>
+                            <strong>Env:</strong> <span contenteditable="true">Cafe or office desk.</span><br>
+                            <strong>Menu:</strong> <span contenteditable="true">Upbeat music, Main Courses.</span>
+                        </div>
+                    </div>
+                    
+                    <div class="block-card" style="border-left: 4px solid #F4C2C2;">
+                        <div class="block-title" contenteditable="true">🔋 Medium Energy</div>
+                        <div style="font-size:13px; line-height:24px;">
+                            <strong>Tasks:</strong> <span contenteditable="true">Emails, organizing, calls.</span><br>
+                            <strong>Env:</strong> <span contenteditable="true">Home desk, comfortable.</span><br>
+                            <strong>Menu:</strong> <span contenteditable="true">Brown noise, Appetizers.</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="page page-right">
+                    <div class="block-card" style="margin-top: 60px; border-left: 4px solid var(--lilac);">
+                        <div class="block-title" contenteditable="true">🪫 Low Energy</div>
+                        <div style="font-size:13px; line-height:24px;">
+                            <strong>Tasks:</strong> <span contenteditable="true">Admin, repetitive clicks.</span><br>
+                            <strong>Env:</strong> <span contenteditable="true">Couch, soft lighting.</span><br>
+                            <strong>Menu:</strong> <span contenteditable="true">Low Energy Support menu.</span>
+                        </div>
+                    </div>
+                    
+                    <div class="block-card bg-paper" style="border-left: 4px solid #ddd; opacity:0.8;">
+                        <div class="block-title" contenteditable="true">🔴 No Energy</div>
+                        <div style="font-size:13px; line-height:24px;">
+                            <strong>Tasks:</strong> <span contenteditable="true">REST ONLY. Nothing else.</span><br>
+                            <strong>Env:</strong> <span contenteditable="true">Bed/Dark room.</span><br>
+                            <strong>Menu:</strong> <span contenteditable="true">Guilt-free rewards & sleep.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ====== 8. BRAIN DUMP ====== -->
+            <div class="page-spread" id="spread-dump">
+                <div class="page page-left">
+                    <h1 class="header-title">Brain Dump</h1>
+                    <div class="header-subtitle">Get it out of your head.</div>
+                    
+                    <div style="margin-bottom: 20px;">
+                        <input type="text" id="v3-bd-input" placeholder="+ Add a thought (Press Enter)" style="width:100%; border:none; border-bottom:2px solid #ddd; background:transparent; font-family:Montserrat; font-size:16px; padding:10px 0; outline:none;" onkeypress="if(event.key === 'Enter') { v3_addBrainDumpItem(this.value); this.value=''; }">
+                    </div>
+
+                    <div id="v3-bd-dumped" style="display:flex; flex-direction:column; gap:8px; min-height:400px; padding:15px; background-image: radial-gradient(#ddd 1px, transparent 1px); background-size: 20px 20px; border-radius:10px; border:1px solid #eee;">
+                        <!-- Dumped items -->
+                    </div>
+                </div>
+                <div class="page page-right">
+                    <div style="margin-top: 60px; display:flex; flex-direction:column; gap:15px; width:75%; margin-left:auto;">
+                        <div class="block-card bg-peach" style="padding:12px 18px; margin-bottom: 0;">
+                            <div class="block-title" style="font-size:12px; margin-bottom:5px;">Do later</div>
+                            <div id="v3-bd-later" style="font-size:13px; min-height:40px; display:flex; flex-direction:column; gap:6px;"></div>
+                        </div>
+                        <div class="block-card bg-lilac" style="padding:12px 18px; margin-bottom: 0;">
+                            <div class="block-title" style="font-size:12px; margin-bottom:5px;">Maybe someday</div>
+                            <div id="v3-bd-maybe" style="font-size:13px; min-height:40px; display:flex; flex-direction:column; gap:6px;"></div>
+                        </div>
+                        <div class="block-card" style="padding:12px 18px; margin-bottom: 0; background-color:#f9f9f9; border:1px solid #ddd;">
+                            <div class="block-title" style="font-size:12px; margin-bottom:5px; color: #888;">Ignore</div>
+                            <div id="v3-bd-ignore" style="font-size:13px; min-height:40px; display:flex; flex-direction:column; gap:6px; color:#888;"></div>
+                        </div>
+                    </div>
+                    <div class="dropzone" style="margin-top: 30px; border: 2px dashed #ddd; border-radius: 12px; padding: 20px; text-align: center; color: #aaa; min-height:100px; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:500;">
+                        + Insert Toolkit Module
+                    </div>
+                </div>
+            </div>
+
+            <!-- ====== 9. WINS & V-DAY ====== -->
+            <div class="page-spread" id="spread-wins">
+                <div class="page page-left">
+                    <h1 class="header-title" contenteditable="true">Daily Wins</h1>
+                    <div class="header-subtitle" contenteditable="true">Progress counts, even when small.</div>
+
+                    <div class="block-card bg-peach dynamic-list">
+                        <div class="block-title"><div><span contenteditable="true">3 Wins Today</span></div> <button class="btn-add">+</button></div>
+                        <div class="task-row"><div style="color:var(--rose-gold); margin-right:8px;">★</div><span contenteditable="true">I woke up.</span><div class="controls-go"><button class="btn-del" onclick="delRow(this)">❌</button></div></div>
+                        <div class="task-row"><div style="color:var(--rose-gold); margin-right:8px;">★</div><span contenteditable="true">I ate food.</span><div class="controls-go"><button class="btn-del" onclick="delRow(this)">❌</button></div></div>
+                        <div class="task-row"><div style="color:var(--rose-gold); margin-right:8px;">★</div><span contenteditable="true">I opened this planner.</span><div class="controls-go"><button class="btn-del" onclick="delRow(this)">❌</button></div></div>
+                    </div>
+
+                    <div class="block-card">
+                        <div class="block-title" contenteditable="true">1 Hard thing I handled:</div>
+                        <div contenteditable="true" style="font-size:14px; min-height:30px;">Sent the email.</div>
+                    </div>
+                    <div class="block-card">
+                        <div class="block-title" contenteditable="true">I'm letting go of:</div>
+                        <div contenteditable="true" style="font-size:14px; min-height:30px;">Guilt for not finishing the side project.</div>
+                    </div>
+                </div>
+                <div class="page page-right">
+                    <h1 class="header-title" contenteditable="true">Minimum Viable Day</h1>
+                    <div class="header-subtitle" contenteditable="true">If today is hard, this is enough.</div>
+
+                    <div class="block-card bg-lilac">
+                        <div class="block-title" contenteditable="true">Just these 3 things:</div>
+                        <div style="font-size:14px; line-height:28px;">
+                            <input type="checkbox"> <strong>Essential:</strong> <span contenteditable="true">Reply to boss.</span><br>
+                            <input type="checkbox"> <strong>Body:</strong> <span contenteditable="true">Brush teeth.</span><br>
+                            <input type="checkbox"> <strong>Emotion:</strong> <span contenteditable="true">5 min of silence.</span>
+                        </div>
+                    </div>
+
+                    <div class="block-card">
+                        <div class="block-title" contenteditable="true">Postpone without guilt:</div>
+                        <div contenteditable="true" style="font-size:14px; min-height:50px;">Laundry, Vacuuming, calls to friends.</div>
+                    </div>
+
+                    <div class="block-card bg-mint dynamic-list">
+                        <div class="block-title"><div><span contenteditable="true">Tiny Dopamenu</span></div> <button class="btn-add">+</button></div>
+                        <div class="task-row"><input type="checkbox"><span contenteditable="true">Drink Water</span><div class="controls-go"><button class="btn-del" onclick="delRow(this)">❌</button></div></div>
+                        <div class="task-row"><input type="checkbox"><span contenteditable="true">Eat a Snack</span><div class="controls-go"><button class="btn-del" onclick="delRow(this)">❌</button></div></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ====== 10. RESET RITUAL ====== -->
+            <div class="page-spread" id="spread-reset">
+                <div class="page page-left">
+                    <h1 class="header-title" contenteditable="true">Reset Ritual</h1>
+                    <div class="header-subtitle" contenteditable="true">Close the day softly.</div>
+
+                    <div class="block-card">
+                        <div class="block-title" contenteditable="true">What drained me:</div>
+                        <div contenteditable="true" style="font-size:14px; min-height:40px;">Too many sensory inputs at the office.</div>
+                    </div>
+                    <div class="block-card">
+                        <div class="block-title" contenteditable="true">What helped:</div>
+                        <div contenteditable="true" style="font-size:14px; min-height:40px;">Noise canceling headphones.</div>
+                    </div>
+                    <div class="block-card bg-mint">
+                        <div class="block-title" contenteditable="true">What I want to repeat:</div>
+                        <div contenteditable="true" style="font-size:14px; min-height:40px;">Using the task starter timer.</div>
+                    </div>
+                </div>
+                <div class="page page-right">
+                    <div class="block-card" style="margin-top: 60px;">
+                        <div class="block-title" contenteditable="true">What I want to simplify:</div>
+                        <div contenteditable="true" style="font-size:14px; min-height:40px;">Cooking - buy more easy meals.</div>
+                    </div>
+                    <div class="block-card">
+                        <div class="block-title" contenteditable="true">Not urgent after all:</div>
+                        <div contenteditable="true" style="font-size:14px; min-height:40px;">Cleaning the living room thoroughly.</div>
+                    </div>
+                    <div class="block-card bg-peach">
+                        <div class="block-title" contenteditable="true" style="color:var(--rose-gold);">Tomorrow starts with:</div>
+                        <div contenteditable="true" style="font-size:18px; font-weight:bold; min-height:40px;">A glass of water and 5 mins of peace.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Central Rings -->
+            <div class="rings-container">
+                <div class="ring"><div class="hole"></div><div class="hole"></div></div><div class="ring"><div class="hole"></div><div class="hole"></div></div><div class="ring"><div class="hole"></div><div class="hole"></div></div>
+                <div style="height: 200px;"></div>
+                <div class="ring"><div class="hole"></div><div class="hole"></div></div><div class="ring"><div class="hole"></div><div class="hole"></div></div><div class="ring"><div class="hole"></div><div class="hole"></div></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Engine & Persistence -->
+    <script>
+        const STORAGE_KEY = 'focusflow_v2_state'; // Restoring V2 state!
+        const TAB_KEY = 'focusflow_v2_tab';
+
+        // Initialize state, but allow an empty page to load if wiped
+        function loadState() {
+            const savedDOM = localStorage.getItem(STORAGE_KEY);
+            if(savedDOM) {
+                document.getElementById('spread-container').innerHTML = savedDOM;
+            }
+            
+            const savedTab = localStorage.getItem(TAB_KEY) || 'spread-cover';
+            document.querySelectorAll('.top-tab').forEach(el => {
+                el.classList.remove('active');
+                if(el.dataset.target === savedTab) el.classList.add('active');
+            });
+            document.querySelectorAll('.page-spread').forEach(el => el.classList.remove('active'));
+            const targetEl = document.getElementById(savedTab);
+            if(targetEl) targetEl.classList.add('active');
+
+            const savedToolbox = localStorage.getItem('focusflow_v2_toolbox');
+            if(savedToolbox === 'open') {
+                document.getElementById('toolbox-modal').classList.add('open');
+            }
+        }
+
+        function bootApp() {
+            if (typeof loadState === 'function') loadState();
+        }
+        document.addEventListener('DOMContentLoaded', bootApp);
+
+        // Auto-save mutation observer pattern is safer than event listening for all inputs
+        function saveState() {
+            localStorage.setItem(STORAGE_KEY, document.getElementById('spread-container').innerHTML);
+        }
+
+        function wipeData() {
+            if(confirm("Factory reset? This deletes all your custom tasks and inputs!")) {
+                localStorage.removeItem(STORAGE_KEY);
+                localStorage.removeItem(TAB_KEY);
+                localStorage.removeItem('focusflow_v3_state');
+                localStorage.removeItem('focusflow_v2_toolbox');
+                location.reload(); 
+            }
+        }
+
+        // Global Event Delegation for clicks/interactions
+        document.querySelector('.binder').addEventListener('click', function(e) {
+            
+            // Tab Navigation
+            if(e.target.matches('.top-tab')) {
+                document.querySelectorAll('.top-tab').forEach(el => el.classList.remove('active')); 
+                e.target.classList.add('active');
+                
+                document.querySelectorAll('.page-spread').forEach(el => el.classList.remove('active')); 
+                const target = e.target.dataset.target;
+                document.getElementById(target).classList.add('active');
+                
+                localStorage.setItem(TAB_KEY, target);
+                saveState();
+            }
+
+            // Radio Buttons (Task Starter)
+            if(e.target.matches('.radio-btn')) {
+                e.target.parentElement.querySelectorAll('.radio-btn').forEach(btn => btn.classList.remove('active'));
+                e.target.classList.add('active');
+                // Reflect active state in HTML for auto-save
+                e.target.setAttribute('class', 'radio-btn active');
+                saveState();
+            }
+
+            // Buttons Add Task
+            if(e.target.matches('.btn-add')) {
+                const list = e.target.closest('div').parentElement;
+                const newItem = document.createElement('div'); newItem.className = 'task-row';
+                newItem.innerHTML = '<input type="checkbox"><span contenteditable="true">New Task...</span><div class="controls-go"><button class="btn-cal" onclick="syncCal(this)">📅</button><button class="btn-del" onclick="delRow(this)">❌</button></div>';
+                list.appendChild(newItem);
+                saveState();
+            }
+
+            // Checkboxes
+            if(e.target.matches('input[type="checkbox"]')) {
+                if(e.target.checked) e.target.setAttribute('checked', 'checked'); 
+                else e.target.removeAttribute('checked'); 
+                saveState();
+            }
+        });
+
+        // Content Editable tracking
+        document.querySelector('.binder').addEventListener('input', function(e) { 
+            if(e.target.matches('[contenteditable="true"]') || e.target.matches('textarea')) saveState(); 
+        });
+
+        function delRow(btn) {
+            btn.closest('div.task-row, tr').remove();
+            saveState();
+        }
+
+        function syncCal(btn) {
+            const taskItem = btn.closest('.task-row');
+            if(!taskItem) return;
+            const spanText = taskItem.querySelector('span[contenteditable="true"]').innerText;
+            if(!spanText || spanText.trim() === "New Task..." || spanText.trim() === "") { alert("Please write a task first before syncing to calendar!"); return; }
+            const calendarUrl = `https://calendar.google.com/calendar/u/0/r/eventedit?text=${encodeURIComponent(spanText)}&details=${encodeURIComponent("Automated via FocusFlow AuDHD Editable Planner.")}`;
+            window.open(calendarUrl, '_blank');
+        }
+
+        function addHyperRow() {
+            const tbody = document.getElementById('hyper-table').querySelector('tbody');
+            const newRow = document.createElement('tr');
+            newRow.innerHTML = '<td contenteditable="true"></td><td contenteditable="true">New</td><td contenteditable="true">00:00</td><td contenteditable="true">00:00</td><td contenteditable="true">0h</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><button class="btn-del" onclick="delRow(this)">X</button></td>';
+            tbody.appendChild(newRow);
+            saveState();
+        }
+
+        /* Widgets System */
+        function toggleToolbox() { 
+            const modal = document.getElementById('toolbox-modal');
+            modal.classList.toggle('open'); 
+            localStorage.setItem('focusflow_v2_toolbox', modal.classList.contains('open') ? 'open' : 'closed');
+        }
+
+        const widgetTemplates = {
+            'sensory': `<div class="block-card"><div class="block-title"><div>🎧 Sensory Check</div><button class="btn-del" onclick="this.parentElement.parentElement.remove(); saveState();">X</button></div><div style="font-size:13px; line-height:22px;">Light Sensitivity: <span contenteditable="true">1/10</span><br>Sound Tolerance: <span contenteditable="true">1/10</span></div></div>`,
+            'therapy': `<div class="block-card bg-lilac"><div class="block-title"><div>🧠 Therapy Notes</div><button class="btn-del" onclick="this.parentElement.parentElement.remove(); saveState();">X</button></div><div contenteditable="true" style="font-size:13px; min-height:50px;">Issues to discuss...</div></div>`,
+            'finance': `<div class="block-card bg-peach dynamic-list"><div class="block-title"><div>💸 Wait List</div><button class="btn-del" onclick="this.parentElement.parentElement.remove(); saveState();">X</button></div><div class="task-row"><span contenteditable="true">Item 1 ($00)</span><div class="controls-go"><button class="btn-del" onclick="delRow(this)">❌</button></div></div></div>`
+        };
+
+        function injectWidget(type) {
+            const spreadActive = document.querySelector('.page-spread.active');
+            let targetArea = spreadActive.querySelector('.dropzone');
+            if(!targetArea) { alert("Navigate to Today Dashboard or Brain Dump to inject widgets."); return; }
+            if(targetArea.innerHTML.includes("Inject Expansion")) targetArea.innerHTML = "";
+            targetArea.insertAdjacentHTML('beforeend', widgetTemplates[type]);
+            toggleToolbox(); 
+            saveState();
+        }
+
+        /* Backup System */
+        function exportBackup() { saveState(); const state = localStorage.getItem(STORAGE_KEY) || ""; const blob = new Blob([state], {type: "text/html"}); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = "FocusFlow_V2_Backup.html_data"; a.click(); URL.revokeObjectURL(url); }
+        document.getElementById('file-input').addEventListener('change', function(e) { const file = e.target.files[0]; if(file) { const reader = new FileReader(); reader.onload = function(e) { localStorage.setItem(STORAGE_KEY, e.target.result); loadState(); alert("Backup Restored!"); }; reader.readAsText(file); } });
+
+        // ==========================================
+        // V3 ACTION ENGINE (JSON STATE - ETAPA 1)
+        // ==========================================
+        const V3_STORAGE_KEY = 'focusflow_v3_state';
+
+        let plannerState = {
+          meta: { version: "3.4.0" },
+          ui: { activeTab: "spread-today", selectedDate: getTodayDate(), activeTimerId: null },
+          dailyPages: {},
+          tasks: {},
+          timers: {},
+          focusBlocks: {},
+          brainDump: {}
+        };
+
+        function getTodayDate() {
+            const d = new Date();
+            const year = d.getFullYear();
+            const month = String(d.getMonth() + 1).padStart(2, '0');
+            const day = String(d.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+
+        function v3_createInitialState() {
+            const today = getTodayDate();
+            plannerState.dailyPages[today] = {
+                date: today,
+                taskIds: []
+            };
+            
+            // Add default demo tasks for day 1
+            const id1 = 'task_' + Date.now() + 'A';
+            const id2 = 'task_' + Date.now() + 'B';
+            plannerState.tasks[id1] = { id: id1, title: "Drink a full glass of water", status: "todo", date: today, isMinimum: true, createdAt: new Date().toISOString() };
+            plannerState.tasks[id2] = { id: id2, title: "Open the project file", status: "todo", date: today, isMinimum: true, createdAt: new Date().toISOString() };
+            plannerState.dailyPages[today].taskIds.push(id1, id2);
+            
+            v3_saveState();
+        }
+
+        function v3_loadState() {
+            const raw = localStorage.getItem(V3_STORAGE_KEY);
+            if(raw) plannerState = JSON.parse(raw);
+            else v3_createInitialState();
+            
+            if(!plannerState.timers) plannerState.timers = {};
+            if(!plannerState.focusBlocks) plannerState.focusBlocks = {};
+            if(!plannerState.brainDump) plannerState.brainDump = {};
+            if(plannerState.ui.activeTimerId === undefined) plannerState.ui.activeTimerId = null;
+
+            v3_ensureDailyPage(plannerState.ui.selectedDate);
+            v3_startTimerTickLoop();
+        }
+
+        function v3_saveState() {
+            localStorage.setItem(V3_STORAGE_KEY, JSON.stringify(plannerState));
+        }
+
+        function v3_ensureDailyPage(dateStr) {
+            if(!plannerState.dailyPages[dateStr]) {
+                plannerState.dailyPages[dateStr] = { 
+                    date: dateStr, taskIds: [],
+                    focusOfDay: '', energyLevel: null, rewardOfDay: ''
+                };
+                v3_saveState();
+            }
+        }
+
+        // Actions
+        function v3_addTask() {
+            const date = plannerState.ui.selectedDate;
+            v3_ensureDailyPage(date);
+            
+            const id = 'task_' + Date.now() + Math.floor(Math.random()*1000);
+            plannerState.tasks[id] = {
+                id: id,
+                title: "New Task...",
+                status: "todo",
+                date: date,
+                isMinimum: true,
+                createdAt: new Date().toISOString()
+            };
+            plannerState.dailyPages[date].taskIds.push(id);
+            v3_saveState();
+            v3_renderTodayTasks();
+        }
+
+        function v3_updateTaskTitle(id, newTitle) {
+            if(plannerState.tasks[id]) {
+                plannerState.tasks[id].title = newTitle;
+                v3_saveState(); // Save silently without rerendering to avoid losing cursor focus
+            }
+        }
+
+        function v3_toggleTask(id) {
+            if(plannerState.tasks[id]) {
+                plannerState.tasks[id].status = plannerState.tasks[id].status === 'done' ? 'todo' : 'done';
+                v3_saveState();
+                v3_renderTodayTasks();
+            }
+        }
+
+        function v3_deleteTask(id) {
+            if(plannerState.tasks[id]) {
+                const date = plannerState.tasks[id].date;
+                const page = plannerState.dailyPages[date];
+                if(page) page.taskIds = page.taskIds.filter(tid => tid !== id);
+                delete plannerState.tasks[id];
+                v3_saveState();
+                v3_renderTodayTasks();
+            }
+        }
+
+        // Render
+        function v3_renderTodayTasks() {
+            const container = document.getElementById('v3-today-tasks');
+            if(!container) return;
+            
+            const date = plannerState.ui.selectedDate;
+            const page = plannerState.dailyPages[date];
+            if(!page) return;
+            
+            container.innerHTML = '';
+            
+            page.taskIds.forEach(id => {
+                const task = plannerState.tasks[id];
+                if(!task) return;
+                
+                const isChecked = task.status === 'done' ? 'checked' : '';
+                const row = document.createElement('div');
+                row.className = 'task-row';
+                
+                let badges = '';
+                if(task.integrationState && task.integrationState.googleOpenedAt) badges += '<span style="font-size:10px; color:var(--mint); margin-right:4px;" title="Synced to Google">✓ G</span>';
+                if(task.integrationState && task.integrationState.icsExportedAt) badges += '<span style="font-size:10px; color:var(--mint); margin-right:4px;" title="Exported as ICS">✓ ICS</span>';
+
+                row.innerHTML = `
+                    <input type="checkbox" onclick="v3_toggleTask('${id}')" ${isChecked}>` + 
+                    `<span contenteditable="true" style="margin-right:auto;" oninput="v3_updateTaskTitle('${id}', this.innerText)">${task.title}</span>` +
+                    `<div style="display:flex; gap:4px; margin-right:10px; align-items:center;">${badges}</div>` +
+                    `<div style="display:flex; gap:4px; margin-right:15px;">
+                        <button class="btn" style="padding:2px 6px; font-size:10px; min-width:auto;" onclick="v3_startTaskTimer('${id}', 5)" title="5 min timer">5m</button>
+                        <button class="btn" style="padding:2px 6px; font-size:10px; min-width:auto;" onclick="v3_startTaskTimer('${id}', 25)" title="25 min timer">25m</button>
+                    </div>` +
+                    `<div class="controls-go">
+                        <button class="btn-cal" onclick="v3_createBlockFromTask('${id}')" title="Create Focus Block">📦</button>
+                        <button class="btn-cal" onclick="v3_moveTaskToTomorrow('${id}')" title="Send to Tomorrow">➡️</button>
+                        <button class="btn-cal" onclick="v3_syncTaskToGoogle('${id}')" title="Google Calendar Sync">📅</button>
+                        <button class="btn-cal" onclick="v3_exportTaskAsICS('${id}')" title="Export .ics File">⬇️</button>
+                        <button class="btn-del" onclick="v3_deleteTask('${id}')">❌</button>
+                    </div>`;
+                container.appendChild(row);
+            });
+        }
+        // Navigation & Daily Actions
+        function v3_moveTaskToTomorrow(id) {
+            if(!plannerState.tasks[id]) return;
+            const task = plannerState.tasks[id];
+            const oldDate = task.date;
+            
+            const oldPage = plannerState.dailyPages[oldDate];
+            if(oldPage) oldPage.taskIds = oldPage.taskIds.filter(tid => tid !== id);
+            
+            const d = new Date(oldDate + "T12:00:00"); // Safely parse local date
+            d.setDate(d.getDate() + 1);
+            const tomorrowStr = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+            
+            task.date = tomorrowStr;
+            v3_ensureDailyPage(tomorrowStr);
+            plannerState.dailyPages[tomorrowStr].taskIds.push(id);
+            
+            v3_saveState();
+            v3_renderTodayTab();
+            v3_showToast('Task sent to tomorrow', 'success');
+        }
+
+        function v3_updatePageField(field, value) {
+            const date = plannerState.ui.selectedDate;
+            v3_ensureDailyPage(date);
+            plannerState.dailyPages[date][field] = value;
+            v3_saveState();
+        }
+
+        function v3_setEnergy(level) {
+            v3_updatePageField('energyLevel', level);
+            v3_renderTodayTab(); 
+        }
+
+        function v3_changeDate(offset) {
+            const current = new Date(plannerState.ui.selectedDate + "T12:00:00");
+            if (offset === 0) plannerState.ui.selectedDate = getTodayDate();
+            else {
+                current.setDate(current.getDate() + offset);
+                plannerState.ui.selectedDate = `${current.getFullYear()}-${String(current.getMonth()+1).padStart(2,'0')}-${String(current.getDate()).padStart(2,'0')}`;
+            }
+            v3_ensureDailyPage(plannerState.ui.selectedDate);
+            v3_saveState();
+            v3_renderTodayTab();
+            v3_renderFocusTab();
+        }
+
+        function v3_renderTodayTab() {
+            const date = plannerState.ui.selectedDate;
+            document.getElementById('v3-date-display').innerText = date;
+            
+            const page = plannerState.dailyPages[date];
+            if(page) {
+                const f = document.getElementById('v3-focus-input');
+                if(f && document.activeElement !== f) f.innerText = page.focusOfDay || "";
+                
+                const r = document.getElementById('v3-reward-input');
+                if(r && document.activeElement !== r) r.innerText = page.rewardOfDay || "";
+
+                const group = document.getElementById('v3-energy-group');
+                if(group) {
+                    group.querySelectorAll('.radio-btn').forEach(btn => {
+                        if(parseInt(btn.innerText) === page.energyLevel) btn.classList.add('active');
+                        else btn.classList.remove('active');
+                    });
+                }
+            }
+            v3_renderTodayTasks();
+        }
+        
+        // Boot V3 alongside V2 and upgrade legacy DOM structurally to support V3
+        const _originalLoadState = loadState;
+        loadState = function() {
+            _originalLoadState(); 
+
+            // Migration: Upgrading V2 legacy layout to V3 structurally if loaded from V2 persistence
+            if(!document.getElementById('v3-today-tasks')) {
+                const oldTasks = document.querySelector('#spread-today .dynamic-list');
+                if(oldTasks) oldTasks.innerHTML = `<div class="block-title"><div><span>My tasks for today</span></div> <button class="btn-add" onclick="v3_addTask()">+</button></div><div id="v3-today-tasks"></div>`;
+                const todaySub = document.querySelector('#spread-today .header-subtitle');
+                if(todaySub) todaySub.innerHTML = `<span contenteditable="true">Your cockpit. Clear for takeoff.</span><span id="v3-date-nav" style="display:flex; gap:10px; align-items:center; user-select:none;"><button class="btn" style="padding: 4px 8px; font-size:10px;" onclick="v3_changeDate(-1)">◄</button><span id="v3-date-display" style="font-weight:bold; font-size:14px; min-width:85px; text-align:center;"></span><button class="btn" style="padding: 4px 8px; font-size:10px;" onclick="v3_changeDate(1)">►</button><button class="btn" style="padding: 4px 8px; font-size:10px;" onclick="v3_changeDate(0)">Today</button></span>`;
+                const focusCard = document.querySelector('#spread-today .bg-peach');
+                if(focusCard && focusCard.children[0].innerText.includes('Focus')) {
+                    const t = focusCard.children[1] ? focusCard.children[1].innerText : '';
+                    focusCard.innerHTML = `<div class="block-title">Focus of the day</div><div id="v3-focus-input" contenteditable="true" style="font-size:18px; line-height:30px; font-family:'Playfair Display'; color:var(--rose-gold);" onblur="v3_updatePageField('focusOfDay', this.innerText)">${t}</div>`;
+                }
+                const rewardCard = document.querySelector('#spread-today [style*="dashed"]');
+                if(rewardCard) {
+                    const t = rewardCard.children[1] ? rewardCard.children[1].innerText : '';
+                    rewardCard.innerHTML = `<div class="block-title">Today's Reward</div><div id="v3-reward-input" contenteditable="true" style="font-size:14px; min-height:40px;" onblur="v3_updatePageField('rewardOfDay', this.innerText)">${t}</div>`;
+                }
+                const energyRow = document.querySelector('#spread-today .radio-group');
+                if(energyRow && !energyRow.id) {
+                    energyRow.id = 'v3-energy-group';
+                    energyRow.innerHTML = `<div class="radio-btn" onclick="v3_setEnergy(1)">1</div><div class="radio-btn" onclick="v3_setEnergy(2)">2</div><div class="radio-btn" onclick="v3_setEnergy(3)">3</div><div class="radio-btn" onclick="v3_setEnergy(4)">4</div><div class="radio-btn" onclick="v3_setEnergy(5)">5</div>`;
+                }
+                
+                if(!document.getElementById('v3-active-timer')) {
+                    const todayLeft = document.querySelector('#spread-today .page-left');
+                    if(todayLeft) {
+                        const timerDiv = document.createElement('div');
+                        timerDiv.id = 'v3-active-timer';
+                        timerDiv.style.marginBottom = '15px';
+                        todayLeft.insertBefore(timerDiv, todayLeft.children[2]);
+                    }
+                }
+                if(!document.getElementById('v3-focus-blocks-left')) {
+                    const focusLeft = document.querySelector('#spread-focus .page-left');
+                    const focusRight = document.querySelector('#spread-focus .page-right');
+                    if(focusLeft) focusLeft.innerHTML = `<h1 class="header-title">Focus Blocks</h1><div class="header-subtitle">Structure helps. Flexibility stays.</div><div id="v3-focus-blocks-left"></div><div style="margin-top:20px;"><button class="btn" style="background:#eee" onclick="v3_addFocusBlock(plannerState.ui.selectedDate)">+ Add Block</button></div>`;
+                    if(focusRight) focusRight.innerHTML = `<div id="v3-focus-blocks-right" style="margin-top: 60px;"></div>`;
+                }
+            }
+            v3_loadState();
+            v3_renderTodayTab();
+            v3_renderFocusTab();
+            v3_renderBrainDump();
+        };
+
+        // ==========================================
+        // V3.3 POLIMENTO (TOASTS E FEEDBACK)
+        // ==========================================
+        function v3_showToast(msg, type = 'info') {
+            let container = document.getElementById('v3-toast-container');
+            if (!container) {
+                container = document.createElement('div');
+                container.id = 'v3-toast-container';
+                container.style.position = 'fixed';
+                container.style.bottom = '20px';
+                container.style.right = '20px';
+                container.style.display = 'flex';
+                container.style.flexDirection = 'column';
+                container.style.gap = '10px';
+                container.style.zIndex = '9999';
+                document.body.appendChild(container);
+            }
+            const toast = document.createElement('div');
+            let bgColor = '#333'; let icon = 'ℹ️';
+            if(type === 'success') { bgColor = 'var(--mint)'; icon = '✓'; toast.style.color = '#000'; }
+            if(type === 'error') { bgColor = '#f8d7da'; icon = '⚠️'; toast.style.color = '#721c24'; }
+            if(type === 'info') toast.style.color = '#fff';
+            
+            toast.style.background = bgColor;
+            toast.style.padding = '12px 20px';
+            toast.style.borderRadius = '8px';
+            toast.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
+            toast.style.fontFamily = 'Inter, sans-serif';
+            toast.style.fontSize = '14px';
+            toast.style.fontWeight = '500';
+            toast.style.opacity = '0';
+            toast.style.transform = 'translateY(20px)';
+            toast.style.transition = 'all 0.3s ease';
+            toast.innerHTML = `<span style="margin-right:8px;">${icon}</span>${msg}`;
+            
+            container.appendChild(toast);
+            setTimeout(() => { toast.style.opacity = '1'; toast.style.transform = 'translateY(0)'; }, 10);
+            setTimeout(() => {
+                toast.style.opacity = '0'; toast.style.transform = 'translateY(20px)';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        function v3_ensureIntegrationState(entity) {
+            if(!entity.integrationState) entity.integrationState = { googleOpenedAt: null, icsExportedAt: null };
+        }
+
+        // ==========================================
+        // V3.1 TIME ENGINE (TIMERS E FOCUS BLOCKS)
+        // ==========================================
+        
+        function v3_calculateEndTime(startTime, durationMinutes) {
+            const [hours, minutes] = startTime.split(':').map(Number);
+            const total = hours * 60 + minutes + durationMinutes;
+            const endHours = Math.floor(total / 60) % 24;
+            const endMinutes = total % 60;
+            return `${String(endHours).padStart(2, '0')}:${String(endMinutes).padStart(2, '0')}`;
+        }
+
+        function v3_nowISO() { return new Date().toISOString(); }
+        function v3_generateId(prefix) { return `${prefix}_${Date.now()}_${Math.floor(Math.random() * 1000)}`; }
+
+        // --- TIMERS ---
+        function v3_startTaskTimer(taskId, durationMinutes) {
+            const task = plannerState.tasks[taskId];
+            if (!task) return;
+            v3_cancelActiveTimerIfNeeded();
+            const id = v3_generateId('timer');
+            const now = new Date();
+            const ends = new Date(now.getTime() + durationMinutes * 60000);
+            plannerState.timers[id] = {
+                id, type: 'task', linkedTaskId: taskId, linkedFocusBlockId: null,
+                date: task.date, durationMinutes, startedAt: now.toISOString(), endsAt: ends.toISOString(),
+                status: 'running', completedAt: null, cancelledAt: null, createdAt: now.toISOString(), updatedAt: now.toISOString()
+            };
+            plannerState.ui.activeTimerId = id;
+            v3_saveState();
+            v3_showToast(`Started ${durationMinutes}min Task Timer`, 'info');
+            v3_renderActiveTimer();
+        }
+
+        function v3_startFocusBlockTimer(blockId) {
+            const block = plannerState.focusBlocks[blockId];
+            if (!block) return;
+            v3_cancelActiveTimerIfNeeded();
+            const id = v3_generateId('timer');
+            const now = new Date();
+            const ends = new Date(now.getTime() + block.durationMinutes * 60000);
+            plannerState.timers[id] = {
+                id, type: 'focus_block', linkedTaskId: block.linkedTaskId || null, linkedFocusBlockId: blockId,
+                date: block.date, durationMinutes: block.durationMinutes, startedAt: now.toISOString(), endsAt: ends.toISOString(),
+                status: 'running', completedAt: null, cancelledAt: null, createdAt: now.toISOString(), updatedAt: now.toISOString()
+            };
+            block.timerId = id;
+            block.status = 'running';
+            block.updatedAt = v3_nowISO();
+            plannerState.ui.activeTimerId = id;
+            v3_saveState();
+            v3_showToast(`Running focus block timer`, 'info');
+            v3_renderActiveTimer();
+            v3_renderFocusTab();
+        }
+
+        function v3_cancelActiveTimerIfNeeded() {
+            const activeId = plannerState.ui.activeTimerId;
+            if (!activeId) return;
+            const timer = plannerState.timers[activeId];
+            if (!timer || timer.status !== 'running') return;
+            timer.status = 'cancelled';
+            timer.cancelledAt = v3_nowISO();
+            timer.updatedAt = v3_nowISO();
+            if (timer.linkedFocusBlockId) {
+                const block = plannerState.focusBlocks[timer.linkedFocusBlockId];
+                if (block && block.status === 'running') {
+                    block.status = 'planned';
+                    block.timerId = null;
+                    block.updatedAt = v3_nowISO();
+                }
+            }
+            plannerState.ui.activeTimerId = null;
+            v3_saveState();
+            v3_renderFocusTab();
+        }
+
+        function v3_completeTimer(timerId) {
+            const timer = plannerState.timers[timerId];
+            if (!timer) return;
+            timer.status = 'completed';
+            timer.completedAt = v3_nowISO();
+            timer.updatedAt = v3_nowISO();
+            if (timer.linkedFocusBlockId) {
+                const block = plannerState.focusBlocks[timer.linkedFocusBlockId];
+                if (block) {
+                    block.status = 'completed';
+                    block.timerId = null;
+                    block.updatedAt = v3_nowISO();
+                }
+            }
+            plannerState.ui.activeTimerId = null;
+            v3_saveState();
+            v3_showToast('Timer completed!', 'success');
+            v3_renderActiveTimer();
+            v3_renderFocusTab();
+        }
+
+        function v3_getRemainingSeconds(timerId) {
+            const timer = plannerState.timers[timerId];
+            if (!timer || timer.status !== 'running') return 0;
+            const now = new Date();
+            const ends = new Date(timer.endsAt);
+            return Math.max(0, Math.floor((ends - now) / 1000));
+        }
+
+        function v3_getActiveTimer() {
+            const id = plannerState.ui.activeTimerId;
+            return id ? plannerState.timers[id] : null;
+        }
+
+        let v3TimerInterval = null;
+        function v3_startTimerTickLoop() {
+            if (v3TimerInterval) clearInterval(v3TimerInterval);
+            v3TimerInterval = setInterval(() => {
+                const timer = v3_getActiveTimer();
+                if (!timer || timer.status !== 'running') {
+                    v3_renderActiveTimer();
+                    return;
+                }
+                const remaining = v3_getRemainingSeconds(timer.id);
+                if (remaining <= 0) {
+                    v3_completeTimer(timer.id);
+                    return;
+                }
+                v3_renderActiveTimer();
+            }, 1000);
+        }
+
+        function v3_renderActiveTimer() {
+            const container = document.getElementById('v3-active-timer');
+            if (!container) return;
+            const timer = v3_getActiveTimer();
+            if (!timer || timer.status !== 'running') {
+                container.innerHTML = '';
+                container.style.display = 'none';
+                return;
+            }
+            container.style.display = 'block';
+            const remaining = v3_getRemainingSeconds(timer.id);
+            const mins = Math.floor(remaining / 60);
+            const secs = remaining % 60;
+            let label = 'Focus Timer';
+            if (timer.linkedTaskId && plannerState.tasks[timer.linkedTaskId]) label = plannerState.tasks[timer.linkedTaskId].title;
+            else if (timer.linkedFocusBlockId && plannerState.focusBlocks[timer.linkedFocusBlockId]) label = plannerState.focusBlocks[timer.linkedFocusBlockId].title;
+
+            container.innerHTML = `
+                <div class="block-card bg-mint" style="display:flex; justify-content:space-between; align-items:center; border-left:4px solid ${timer.type === 'task' ? 'var(--text-dark)' : '#fff'};">
+                    <div>
+                        <div class="block-title" style="margin-bottom:5px;">Active Timer ${timer.type === 'focus_block' ? '📦' : ''}</div>
+                        <div style="font-size:14px; font-weight:bold;">${label}</div>
+                    </div>
+                    <div style="font-size:32px; font-weight:bold; font-family:Montserrat; width:110px; text-align:right;">
+                        ${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}
+                    </div>
+                    <div>
+                        <button class="btn" style="background:transparent; border:1px solid #000; padding:4px 8px; font-size:11px;" onclick="v3_completeTimer('${timer.id}')">✓ Finish</button>
+                        <button class="btn" style="background:#000; color:#fff; border:none; padding:4px 8px; font-size:11px; margin-left:4px;" onclick="v3_cancelActiveTimerIfNeeded(); v3_showToast('Timer cancelled', 'info'); v3_renderActiveTimer();">Cancel</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- FOCUS BLOCKS ---
+        function v3_addFocusBlock(date, blockData = {}) {
+            const id = v3_generateId('block');
+            const startTime = blockData.startTime || '09:00';
+            const durationMinutes = blockData.durationMinutes || 25;
+            plannerState.focusBlocks[id] = {
+                id, date, label: blockData.label || 'Focus Block', title: blockData.title || 'New focus block',
+                linkedTaskId: blockData.linkedTaskId || null, startTime, durationMinutes,
+                endTime: v3_calculateEndTime(startTime, durationMinutes), energyBefore: null, energyAfter: null,
+                notes: '', status: 'planned', outcome: null, timerId: null, createdAt: v3_nowISO(), updatedAt: v3_nowISO()
+            };
+            v3_saveState();
+            v3_renderFocusTab();
+            v3_showToast('Focus block created', 'success');
+        }
+
+        function v3_updateFocusBlock(blockId, patch) {
+            const block = plannerState.focusBlocks[blockId];
+            if (!block) return;
+            
+            if ('durationMinutes' in patch) {
+                const dur = parseInt(patch.durationMinutes);
+                if (isNaN(dur) || dur <= 0) {
+                    v3_showToast('Please set a valid duration (> 0)', 'error');
+                    v3_renderFocusTab(); // revert input
+                    return;
+                }
+                patch.durationMinutes = dur;
+            }
+            if ('startTime' in patch) {
+                if (!patch.startTime || patch.startTime.trim() === '') {
+                    v3_showToast('Start time is required', 'error');
+                    v3_renderFocusTab(); // revert input
+                    return;
+                }
+            }
+
+            Object.assign(block, patch);
+            if ('startTime' in patch || 'durationMinutes' in patch) {
+                block.endTime = v3_calculateEndTime(block.startTime, block.durationMinutes);
+            }
+            block.updatedAt = v3_nowISO();
+            v3_saveState();
+            
+            // if duration or start changed, sync visually
+            if ('startTime' in patch || 'durationMinutes' in patch) {
+                const endTimeSpan = document.getElementById(`v3-endtime-${blockId}`);
+                if (endTimeSpan) endTimeSpan.innerText = block.endTime;
+            }
+        }
+
+        function v3_deleteFocusBlock(blockId) {
+            const block = plannerState.focusBlocks[blockId];
+            if (!block) return;
+            if (block.timerId && plannerState.timers[block.timerId]) {
+                delete plannerState.timers[block.timerId];
+                if (plannerState.ui.activeTimerId === block.timerId) plannerState.ui.activeTimerId = null;
+            }
+            delete plannerState.focusBlocks[blockId];
+            v3_saveState();
+            v3_renderFocusTab();
+        }
+
+        function v3_createBlockFromTask(taskId, startTime = '09:00', durationMinutes = 25) {
+            const task = plannerState.tasks[taskId];
+            if (!task) return;
+            v3_addFocusBlock(task.date, { title: task.title, linkedTaskId: taskId, startTime, durationMinutes });
+            // Switch to focus tab visually
+            document.querySelectorAll('.top-tab').forEach(el => el.classList.remove('active'));
+            const focusTab = document.querySelector('.top-tab[data-target="spread-focus"]');
+            if(focusTab) focusTab.classList.add('active');
+            document.querySelectorAll('.page-spread').forEach(el => el.classList.remove('active'));
+            document.getElementById('spread-focus').classList.add('active');
+            
+            plannerState.ui.activeTab = 'spread-focus';
+            if (typeof TAB_KEY !== 'undefined') localStorage.setItem(TAB_KEY, 'spread-focus');
+            v3_saveState();
+            v3_showToast('Task packed into focus block', 'success');
+        }
+
+        function v3_getFocusBlocksForSelectedDate() {
+            const date = plannerState.ui.selectedDate;
+            return Object.values(plannerState.focusBlocks)
+                .filter(block => block.date === date)
+                .sort((a, b) => a.startTime.localeCompare(b.startTime));
+        }
+
+        function v3_renderFocusTab() {
+            const containerL = document.getElementById('v3-focus-blocks-left');
+            const containerR = document.getElementById('v3-focus-blocks-right');
+            if (!containerL || !containerR) return;
+
+            const blocks = v3_getFocusBlocksForSelectedDate();
+            containerL.innerHTML = '';
+            containerR.innerHTML = '';
+
+            blocks.forEach((block, index) => {
+                const card = document.createElement('div');
+                card.className = 'block-card';
+                card.style.borderLeft = block.status === 'completed' ? '4px solid var(--mint)' : (block.status === 'running' ? '4px solid var(--peach)' : '4px solid var(--rose-gold)');
+                
+                card.innerHTML = `
+                <div class="block-title" style="display:flex; justify-content:space-between; align-items:center;">
+                    <span contenteditable="true" onblur="v3_updateFocusBlock('${block.id}', {label: this.innerText})">${block.label}</span>
+                    <button class="btn-del" onclick="v3_deleteFocusBlock('${block.id}')">❌</button>
+                </div>
+                <div style="font-size:13px; line-height:24px;">
+                    <strong>Task:</strong> <span contenteditable="true" onblur="v3_updateFocusBlock('${block.id}', {title: this.innerText})">${block.title}</span><br>
+                    <strong>Time:</strong> <input type="time" style="width:75px; border:none; border-bottom:1px solid #ccc; font-size:12px; font-family:Montserrat" value="${block.startTime}" onchange="v3_updateFocusBlock('${block.id}', {startTime: this.value})"> 
+                    → <span id="v3-endtime-${block.id}">${block.endTime}</span> 
+                    (<input type="number" style="width:40px; border:none; border-bottom:1px solid #ccc; font-size:12px; font-family:Montserrat" value="${block.durationMinutes}" onchange="v3_updateFocusBlock('${block.id}', {durationMinutes: this.value})"> min)<br>
+                    <strong>Notes:</strong> <span contenteditable="true" onblur="v3_updateFocusBlock('${block.id}', {notes: this.innerText})">${block.notes}</span><br>
+                </div>
+                <div style="margin-top:10px; display:flex; gap:10px; align-items:center;">
+                    <button class="btn bg-mint" onclick="v3_startFocusBlockTimer('${block.id}')" style="font-size:11px; padding:4px 8px;">⏱️ Run Timer</button>
+                    <button class="btn" style="background:#eee; font-size:11px; padding:4px 8px;" onclick="v3_syncFocusBlockToGoogle('${block.id}')" title="Google Sync">📅 Google</button>
+                    <button class="btn" style="background:#eee; font-size:11px; padding:4px 8px;" onclick="v3_exportFocusBlockAsICS('${block.id}')" title="Export .ics">⬇️ .ics</button>
+                    ${block.status === 'completed' ? '<span style="font-size:11px; color:#aaa;">✓ Completed</span>' : ''}
+                    ${block.integrationState?.googleOpenedAt ? '<span style="font-size:11px; color:var(--mint);" title="Synced to Google">✓ G</span>' : ''}
+                    ${block.integrationState?.icsExportedAt ? '<span style="font-size:11px; color:var(--mint);" title="Exported as ICS">✓ ICS</span>' : ''}
+                </div>
+                `;
+
+                if (index % 2 === 0) containerL.appendChild(card);
+                else containerR.appendChild(card);
+            });
+        }
+
+        // ==========================================
+        // V3.4 BRAIN DUMP ENGINE
+        // ==========================================
+        
+        function v3_addBrainDumpItem(text) {
+            if(!text || text.trim()==='') return;
+            const id = v3_generateId('bd');
+            plannerState.brainDump[id] = {
+                id, text, status: 'dumped', date: plannerState.ui.selectedDate, createdAt: v3_nowISO()
+            };
+            v3_saveState();
+            v3_renderBrainDump();
+        }
+
+        function v3_updateBrainDumpStatus(id, newStatus) {
+            if(plannerState.brainDump[id]) {
+                plannerState.brainDump[id].status = newStatus;
+                v3_saveState();
+                v3_renderBrainDump();
+            }
+        }
+        
+        function v3_deleteBrainDumpItem(id) {
+            if(plannerState.brainDump[id]) {
+                delete plannerState.brainDump[id];
+                v3_saveState();
+                v3_renderBrainDump();
+            }
+        }
+        
+        function v3_convertDumpToTask(id) {
+            const item = plannerState.brainDump[id];
+            if(!item) return;
+            const date = plannerState.ui.selectedDate;
+            v3_ensureDailyPage(date);
+            
+            const taskId = 'task_' + Date.now() + Math.floor(Math.random()*1000);
+            plannerState.tasks[taskId] = {
+                id: taskId,
+                title: item.text,
+                status: "todo",
+                date: date,
+                isMinimum: false,
+                createdAt: v3_nowISO()
+            };
+            plannerState.dailyPages[date].taskIds.push(taskId);
+            
+            item.status = 'converted_to_task';
+            item.linkedTaskId = taskId;
+            
+            v3_saveState();
+            v3_renderBrainDump();
+            v3_renderTodayTab();
+            v3_showToast('Dump converted to task', 'success');
+        }
+
+        function v3_renderBrainDump() {
+            const dumpedContainer = document.getElementById('v3-bd-dumped');
+            const laterContainer = document.getElementById('v3-bd-later');
+            const ignoreContainer = document.getElementById('v3-bd-ignore');
+            const maybeContainer = document.getElementById('v3-bd-maybe');
+            
+            if(!dumpedContainer || !laterContainer || !ignoreContainer || !maybeContainer) return;
+
+            dumpedContainer.innerHTML = '';
+            laterContainer.innerHTML = '';
+            ignoreContainer.innerHTML = '';
+            maybeContainer.innerHTML = '';
+
+            const items = Object.values(plannerState.brainDump)
+                .filter(item => item.date === plannerState.ui.selectedDate)
+                .sort((a,b) => a.createdAt.localeCompare(b.createdAt));
+
+            items.forEach(item => {
+                if(item.status === 'converted_to_task') return; 
+
+                const row = document.createElement('div');
+                row.className = 'task-row ' + (item.status === 'dumped' ? 'bg-paper' : '');
+                row.style.margin = '0';
+                
+                let controls = '';
+                if(item.status === 'dumped') {
+                    controls = `
+                    <div style="display:flex; gap:4px; align-items:center;">
+                        <button class="btn" style="background:var(--mint); font-size:10px; padding:2px 6px;" onclick="v3_convertDumpToTask('${item.id}')" title="Move to Tasks">🗓️ Task</button>
+                        <button class="btn" style="background:#eee; font-size:10px; padding:2px 6px;" onclick="v3_updateBrainDumpStatus('${item.id}', 'later')" title="Do Later">⏰ Later</button>
+                        <button class="btn" style="background:#eee; font-size:10px; padding:2px 6px;" onclick="v3_updateBrainDumpStatus('${item.id}', 'maybe')" title="Maybe Someday">☁️ Maybe</button>
+                        <button class="btn" style="background:#ddd; font-size:10px; padding:2px 6px;" onclick="v3_updateBrainDumpStatus('${item.id}', 'ignore')" title="Ignore">❌ Ignore</button>
+                    </div>`;
+                } else {
+                    controls = `
+                    <div style="display:flex; gap:4px; align-items:center;">
+                        <button class="btn" style="background:var(--mint); font-size:10px; padding:2px 6px;" onclick="v3_convertDumpToTask('${item.id}')">🗓️ Task</button>
+                        <button class="btn" style="background:#eee; font-size:10px; padding:2px 6px;" onclick="v3_updateBrainDumpStatus('${item.id}', 'dumped')">⬅️ Restore</button>
+                        <button class="btn-del" onclick="v3_deleteBrainDumpItem('${item.id}')">❌</button>
+                    </div>`;
+                }
+
+                row.innerHTML = `<span contenteditable="true" onblur="plannerState.brainDump['${item.id}'].text = this.innerText; v3_saveState();" style="margin-right:auto; font-size:14px; font-weight:500;">${item.text}</span> ${controls}`;
+
+                if(item.status === 'dumped') dumpedContainer.appendChild(row);
+                else if(item.status === 'later') laterContainer.appendChild(row);
+                else if(item.status === 'maybe') maybeContainer.appendChild(row);
+                else if(item.status === 'ignore') ignoreContainer.appendChild(row);
+            });
+        }
+
+        // ==========================================
+        // V3.2 CALENDAR BRIDGE (GOOGLE SYNC & ICS EXPORT)
+        // ==========================================
+
+        function v3_escapeICS(str) {
+            if(!str) return '';
+            return str.replace(/\\/g, '\\\\').replace(/;/g, '\\;').replace(/,/g, '\\,').replace(/\n/g, '\\n');
+        }
+
+        function v3_syncTaskToGoogle(taskId) {
+            const task = plannerState.tasks[taskId];
+            if(!task) return;
+            if(!task.title || task.title.trim() === '') {
+                v3_showToast('Add a title before syncing', 'error');
+                return;
+            }
+            const dStart = new Date(task.date + "T12:00:00");
+            const dEnd = new Date(task.date + "T12:00:00");
+            dEnd.setDate(dEnd.getDate() + 1);
+            const sCal = dStart.toISOString().split('T')[0].replace(/-/g,"");
+            const eCal = dEnd.toISOString().split('T')[0].replace(/-/g,"");
+            
+            v3_ensureIntegrationState(task);
+            task.integrationState.googleOpenedAt = v3_nowISO();
+            v3_saveState();
+            v3_renderTodayTab();
+            v3_showToast('Google Calendar Opened', 'success');
+            
+            const url = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(task.title)}&dates=${sCal}/${eCal}`;
+            window.open(url, '_blank');
+        }
+
+        function v3_syncFocusBlockToGoogle(blockId) {
+            const block = plannerState.focusBlocks[blockId];
+            if(!block) return;
+            if(!block.title || block.title.trim() === '') {
+                v3_showToast('Add a title before syncing', 'error');
+                return;
+            }
+            if(!block.startTime || block.startTime.trim() === '') {
+                v3_showToast('Start time is required', 'error');
+                return;
+            }
+            const sCal = block.date.replace(/-/g,"") + "T" + block.startTime.replace(/:/g,"") + "00";
+            const eCal = block.date.replace(/-/g,"") + "T" + block.endTime.replace(/:/g,"") + "00";
+            
+            let text = encodeURIComponent(block.title);
+            if(block.label) text = encodeURIComponent(`[${block.label}] ${block.title}`);
+            const details = encodeURIComponent(block.notes || '');
+
+            v3_ensureIntegrationState(block);
+            block.integrationState.googleOpenedAt = v3_nowISO();
+            v3_saveState();
+            v3_renderFocusTab();
+            v3_showToast('Google Calendar Opened', 'success');
+            
+            const url = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${text}&dates=${sCal}/${eCal}&details=${details}`;
+            window.open(url, '_blank');
+        }
+
+        function v3_exportTaskAsICS(taskId) {
+            const task = plannerState.tasks[taskId];
+            if(!task) return;
+            if(!task.title || task.title.trim() === '') {
+                v3_showToast('Add a title before exporting', 'error');
+                return;
+            }
+            const dStart = new Date(task.date + "T00:00:00");
+            const dEnd = new Date(task.date + "T00:00:00");
+            dEnd.setDate(dEnd.getDate() + 1);
+            
+            const sCal = `${dStart.getFullYear()}${String(dStart.getMonth()+1).padStart(2,'0')}${String(dStart.getDate()).padStart(2,'0')}`;
+            const eCal = `${dEnd.getFullYear()}${String(dEnd.getMonth()+1).padStart(2,'0')}${String(dEnd.getDate()).padStart(2,'0')}`;
+            
+            v3_ensureIntegrationState(task);
+            task.integrationState.icsExportedAt = v3_nowISO();
+            v3_saveState();
+            v3_renderTodayTab();
+            v3_showToast('.ics exported', 'success');
+
+            const icsContent = `BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//FocusFlow//V3//EN
+BEGIN:VEVENT
+UID:${task.id}@focusflow.app
+DTSTAMP:${v3_nowISO().replace(/-|:|\.\d\d\d/g,"")}
+DTSTART;VALUE=DATE:${sCal}
+DTEND;VALUE=DATE:${eCal}
+SUMMARY:${v3_escapeICS(task.title)}
+END:VEVENT
+END:VCALENDAR`;
+            v3_downloadBlob(icsContent, `task_${task.date}.ics`);
+        }
+
+        function v3_exportFocusBlockAsICS(blockId) {
+            const block = plannerState.focusBlocks[blockId];
+            if(!block) return;
+            if(!block.title || block.title.trim() === '') {
+                v3_showToast('Add a title before exporting', 'error');
+                return;
+            }
+            if(!block.startTime || block.startTime.trim() === '') {
+                v3_showToast('Start time is required', 'error');
+                return;
+            }
+            // Local Floating Time format directly
+            const sCal = block.date.replace(/-/g,"") + "T" + block.startTime.replace(/:/g,"") + "00";
+            const eCal = block.date.replace(/-/g,"") + "T" + block.endTime.replace(/:/g,"") + "00";
+            
+            v3_ensureIntegrationState(block);
+            block.integrationState.icsExportedAt = v3_nowISO();
+            v3_saveState();
+            v3_renderFocusTab();
+            v3_showToast('.ics exported', 'success');
+
+            const icsContent = `BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//FocusFlow//V3//EN
+BEGIN:VEVENT
+UID:${block.id}@focusflow.app
+DTSTAMP:${v3_nowISO().replace(/-|:|\.\d\d\d/g,"")}
+DTSTART:${sCal}
+DTEND:${eCal}
+SUMMARY:${v3_escapeICS(block.title)}
+DESCRIPTION:${v3_escapeICS(block.notes || '')}
+END:VEVENT
+END:VCALENDAR`;
+            v3_downloadBlob(icsContent, `focus_block_${block.date}.ics`);
+        }
+
+        function v3_downloadBlob(content, filename) {
+            const blob = new Blob([content], { type: 'text/calendar;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = filename;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    </script>
 </body>
 </html>
